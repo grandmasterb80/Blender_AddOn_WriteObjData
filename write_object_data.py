@@ -348,34 +348,6 @@ class LIST_OT_MoveItem(Operator):
 		return{'FINISHED'}
 
 # ------------------------------------------------------------------------
-#    Define Dropdown Menu
-# ------------------------------------------------------------------------
-
-class SearchEnumOperator(bpy.types.Operator):
-    bl_idname = "object.search_enum_operator"
-    bl_label = "Search Enum Operator"
-    bl_property = "my_search"
-
-    my_search: EnumProperty(
-        name="My Search",
-        items=(
-            ('FOO', "Foo", ""),
-            ('BAR', "Bar", ""),
-            ('BAZ', "Baz", ""),
-        ),
-    )
-
-    def execute(self, context):
-        self.report({'INFO'}, "Selected:" + self.my_search)
-        return {'FINISHED'}
-
-    def invoke(self, context, event):
-        context.window_manager.invoke_search_popup(self)
-        return {'RUNNING_MODAL'}
-
-
-
-# ------------------------------------------------------------------------
 #    New options Properties->Output->Write Object Data
 #    List of objects for which data has to be written.
 #    This one defines the whole list element including
@@ -521,7 +493,6 @@ classes = (
 	LIST_OT_DeleteItem,
 	LIST_OT_AddSelection,
 	LIST_OT_MoveItem,
-	SearchEnumOperator,
 	WriteObjDataOutputPropertySettings,
 	ObjWriteDataOptionsPropertySettings,
 	Panel_OutputOptions_WriteObjectData,
