@@ -509,6 +509,14 @@ def write_object_data( scene ):
 	else:
 		print("Log: Writing object data disabled.")
 
+@persistent
+def write_object_data_end( scene ):
+	print("Log: def write_object_data_end( scene ).")
+
+@persistent
+def write_object_data_start( scene ):
+	print("Log: def write_object_data_start( scene ).")
+
 
 # ------------------------------------------------------------------------
 #     Registration
@@ -536,8 +544,8 @@ def register():
 
 	# register 'on render' handler
 	# bpy.app.handlers.render_write.append(write_object_data)
-	# bpy.app.handlers.render_complete.append(write_object_data)
-	# bpy.app.handlers.render_pre.append(write_object_data)
+	bpy.app.handlers.render_complete.append(write_object_data_end)
+	bpy.app.handlers.render_pre.append(write_object_data_start)
 	bpy.app.handlers.render_post.append(write_object_data)
 	# bpy.app.handlers.frame_change_pre.append(my_handler)
 
@@ -548,6 +556,7 @@ def register():
 
 	bpy.types.Object.writeObjDataTab = PointerProperty(type=ObjWriteDataOptionsPropertySettings)
 	bpy.types.Object.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
+
 
 def unregister():
 	from bpy.utils import unregister_class
