@@ -168,7 +168,7 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 	)
 
 	opt_writeObjData_Bones : bpy.props.BoolProperty(
-		name="Scale",
+		name="Bones",
 		description="Write the bone data of an object.",
 		default = False
 	)
