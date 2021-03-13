@@ -149,6 +149,43 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		update = execute_operator
 	)
 
+# ------------------------------------------------------------------------
+#    Store properties for the "Output Object Data" in the active scene
+# ------------------------------------------------------------------------
+
+class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
+	opt_writeObjDataObject_Enabled : bpy.props.BoolProperty(
+		name="Write Object Data",
+		description="If enabled, then the object data of this object will be written to a CSV file. Remark: Properties->Output->Write Object Data->Write Object Data has to be enabled",
+		default = True,
+		update = update_opt_writeObjDataObject
+		)
+
+	opt_writeObjDataObject_Overwrite : bpy.props.BoolProperty(
+		name="Overwrite Default Write Object Data",
+		description="If enabled, then the data that is written for this object is determined by the options below. If this option is not selected, the data that is written is determined by the options in Properties->Output->Write Object Data",
+		default = False
+		)
+
+# ------------------------------------------------------------------------
+#    Common properties for the "Write Object Data" for output and object property 
+# ------------------------------------------------------------------------
+
+class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
+	coord_options = [
+		("CAM", "Camera Coord", '', 0),
+		("WOR", "World Coord", '', 1),
+		("CAW", "Camera and World", '', 2),
+	]
+
+	opt_writeObjData_Coord : bpy.props.EnumProperty(
+		name = "Coord",
+		items = coord_options,
+		description = "Coordinates will transformed into the selected coordinate system before they are written to the target file.",
+		default = "CAM",
+		update = execute_operator
+	)
+
 	opt_writeObjData_Position : bpy.props.BoolProperty(
 		name="Position",
 		description="Write the position of an oobject.",
@@ -170,24 +207,6 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 	opt_writeObjData_Bones : bpy.props.BoolProperty(
 		name="Bones",
 		description="Write the bone data of an object.",
-		default = False
-	)
-
-# ------------------------------------------------------------------------
-#    Store properties for the "Output Object Data" in the active scene
-# ------------------------------------------------------------------------
-
-class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
-	opt_writeObjDataObject : bpy.props.BoolProperty(
-		name="Write Object Data",
-		description="If enabled, then the object data of this object will be written to a CSV file. Remark: Properties->Output->Write Object Data->Write Object Data has to be enabled",
-		default = True,
-		update = update_opt_writeObjDataObject
-		)
-
-	opt_writeObjDataObject_Overwrite : bpy.props.BoolProperty(
-		name="Overwrite Default Write Object Data",
-		description="If enabled, then the data that is written for this object is determined by the options below. If this option is not selected, the data that is written is determined by the options in Properties->Output->Write Object Data",
 		default = False
 	)
 
@@ -368,14 +387,11 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		scene = bpy.context.scene
 		#scn = bpy.data
 		writeObjDataTab = scene.writeObjDataTab
+		writeObjDataOpt = scene.writeObjDataOpt
 		#objs = scn.objects
 
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjData_Format")
-		layout.prop(writeObjDataTab, "opt_writeObjData_Position")
-		layout.prop(writeObjDataTab, "opt_writeObjData_Rotation")
-		layout.prop(writeObjDataTab, "opt_writeObjData_Scale")
-		layout.prop(writeObjDataTab, "opt_writeObjData_Bones")
 
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
@@ -397,6 +413,11 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		row.operator('custom_def_list.move_item', text='Mv Up').direction = 'UP'
 		row.operator('custom_def_list.move_item', text='Mv Down').direction = 'DOWN'
 
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Coord")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Position")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Scale")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Bones")
 # ------------------------------------------------------------------------
 #    New options Object Properties->Output Object Data->Write Object Data
 #    List of objects for which data has to be written.
@@ -418,6 +439,7 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		obj = context.object
 		scene = context.scene
 		writeObjDataTab = obj.writeObjDataTab
+		writeObjDataOpt = obj.writeObjDataOpt
 
 		row = layout.row()
 		if obj is not None:
@@ -428,6 +450,12 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Enabled")
 		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Overwrite")
+
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Coord")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Position")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Scale")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Bones")
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
@@ -485,6 +513,7 @@ classes = (
 	LIST_OT_MoveItem,
 	WriteObjDataOutputPropertySettings,
 	ObjWriteDataOptionsPropertySettings,
+	WriteObjDataOutputOptionsPropertySettings,
 	Panel_OutputOptions_WriteObjectData,
 	Panel_ObjectOptions_WriteObjectData,
 	object_delete_override
@@ -504,10 +533,12 @@ def register():
 	# bpy.app.handlers.frame_change_pre.append(my_handler)
 
 	bpy.types.Scene.writeObjDataTab = PointerProperty(type=WriteObjDataOutputPropertySettings)
+	bpy.types.Scene.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
 	bpy.types.Scene.writeObjDataList = CollectionProperty(type = ListItem)
 	bpy.types.Scene.custom_index = IntProperty(name = "Index for writeObjDataList", default = 0)
 
 	bpy.types.Object.writeObjDataTab = PointerProperty(type=ObjWriteDataOptionsPropertySettings)
+	bpy.types.Object.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
 
 def unregister():
 	from bpy.utils import unregister_class
