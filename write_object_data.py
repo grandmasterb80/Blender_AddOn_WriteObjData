@@ -1,12 +1,13 @@
 # import sys; import os; import bpy; import importlib
 # mydir="S:\\eigenes\\Dokumente\\Blender\\python_scripts\\"
+# mydir="C:\\Users\\danie\\Documents\\development\\github\\Blender_AddOn_WriteObjData\\"
 # sys.path.append( mydir )
-# import addon_add_output_object_data
-# addon_add_output_object_data.register()
-# addon_add_output_object_data.unregister()
-# importlib.reload(addon_add_output_object_data)
-# addon_add_output_object_data.register()
-# addon_add_output_object_data.unregister(); importlib.reload(addon_add_output_object_data); addon_add_output_object_data.register()
+# import write_object_data
+# write_object_data.register()
+# write_object_data.unregister()
+# importlib.reload(write_object_data)
+# write_object_data.register()
+# write_object_data.unregister(); importlib.reload(write_object_data); write_object_data.register()
 #
 # or
 #
