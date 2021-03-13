@@ -189,22 +189,6 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 		name="Overwrite Default Write Object Data",
 		description="If enabled, then the data that is written for this object is determined by the options below. If this option is not selected, the data that is written is determined by the options in Properties->Output->Write Object Data",
 		default = False
-		)
-
-	my_int : bpy.props.IntProperty(
-		name = "Set a value",
-		description="A integer property from Daniel",
-		default = 23,
-		min = 10,
-		max = 100
-	)
-	
-	my_float : bpy.props.FloatProperty(
-		name = "Set a value",
-		description = "A float property from Daniel",
-		default = 23.7,
-		min = 0.01,
-		max = 30.0
 	)
 
 # ------------------------------------------------------------------------
@@ -482,8 +466,6 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Enabled")
 		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Overwrite")
-		layout.prop(writeObjDataTab, "my_int", text="Integer Property")
-		layout.prop(writeObjDataTab, "my_float", text="Float Property")
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
