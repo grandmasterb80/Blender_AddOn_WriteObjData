@@ -86,7 +86,7 @@ def remove_from_obj_write_data_list(context, obj):
 def update_opt_writeObjDataObject(self, context):
 	obj = context.object
 	writeObjDataList = context.scene.writeObjDataList
-	if obj.writeObjDataTab.opt_writeObjDataObject:
+	if obj.writeObjDataTab.opt_writeObjDataObject_Enabled:
 		if self not in [sub.objectPtr for sub in writeObjDataList]:
 			writeObjDataList.add()
 			iii = writeObjDataList[ -1 ]
@@ -141,7 +141,7 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		("COCO", "COCO", '', 3)
 	]
 
-	opt_writeObjData : bpy.props.EnumProperty(
+	opt_writeObjData_Format : bpy.props.EnumProperty(
 		name = "Format",
 		items = mode_options,
 		description = "If enabled, then data of objects for which Properties->Object Properties->Write Object Data->Enabled is selected, will be written in the selected format.",
@@ -287,12 +287,12 @@ class LIST_OT_AddSelection(Operator):
 		for obj in context.selected_objects:
 			writeObjDataList = context.scene.writeObjDataList
 			if obj not in [sub.objectPtr for sub in writeObjDataList]:
-				#obj.writeObjDataTab.opt_writeObjDataObject = True;
+				#obj.writeObjDataTab.opt_writeObjDataObject_Enabled = True;
 				writeObjDataList.add()
 				iii = writeObjDataList[ -1 ]
 				iii.objectPtr = obj
 				print( "LIST_OT_AddSelection(Operator): ", obj.name )
-				iii.objectPtr.writeObjDataTab.opt_writeObjDataObject = True
+				iii.objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = True
 				iii.name = obj.name
 				iii.random_prop = ""
 
@@ -318,13 +318,13 @@ class LIST_OT_DeleteItem(Operator):
 		print ("writeObjDataList class", writeObjDataList.__class__.__name__)
 		if self.selection == "ALL":
 			while len( writeObjDataList ) > 0:
-				writeObjDataList[0].objectPtr.writeObjDataTab.opt_writeObjDataObject = False
+				writeObjDataList[0].objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = False
 				print( "LIST_OT_DeleteItem(Operator): ", writeObjDataList[0].objectPtr.name )
 				writeObjDataList.remove(0)
 			context.scene.custom_index = 0 
 		else:
 			index = context.scene.custom_index
-			writeObjDataList[index].objectPtr.writeObjDataTab.opt_writeObjDataObject = False
+			writeObjDataList[index].objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = False
 			print( "LIST_OT_DeleteItem(Operator): ", writeObjDataList[index].objectPtr.name )
 			writeObjDataList.remove(index)
 			context.scene.custom_index = min(max(0, index - 1), len(writeObjDataList) - 1)
@@ -418,7 +418,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 
 		row = layout.row()
 		# display the properties
-		layout.prop(writeObjDataTab, "opt_writeObjData")
+		layout.prop(writeObjDataTab, "opt_writeObjData_Format")
 		layout.prop(writeObjDataTab, "opt_writeObjData_Position")
 		layout.prop(writeObjDataTab, "opt_writeObjData_Rotation")
 		layout.prop(writeObjDataTab, "opt_writeObjData_Scale")
@@ -480,7 +480,7 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 			row.prop(obj, "name")
 
 		# display the properties
-		layout.prop(writeObjDataTab, "opt_writeObjDataObject")
+		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Enabled")
 		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Overwrite")
 		layout.prop(writeObjDataTab, "my_int", text="Integer Property")
 		layout.prop(writeObjDataTab, "my_float", text="Float Property")
@@ -511,7 +511,7 @@ class object_delete_override(bpy.types.Operator):
 
 @persistent
 def write_object_data( scene ):
-	if ( scene.writeObjDataTab.opt_writeObjData != "OFF" ):
+	if ( scene.writeObjDataTab.opt_writeObjData_Format != "OFF" ):
 		print("Log: Writing object data")
 		print("(C) Frame Change", scene.frame_current)
 		print("(C) Load Handler:", bpy.data.filepath)
