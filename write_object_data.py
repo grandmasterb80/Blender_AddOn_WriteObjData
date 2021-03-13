@@ -366,13 +366,10 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 	def draw(self, context):
 		layout = self.layout
 		scene = bpy.context.scene
-		scn = bpy.data
+		#scn = bpy.data
 		writeObjDataTab = scene.writeObjDataTab
-		objs = scn.objects
-		print ( "Number of objects: ", len( objs ))
-		print ( "Number of objects: ", len( objs ))
+		#objs = scn.objects
 
-		row = layout.row()
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjData_Format")
 		layout.prop(writeObjDataTab, "opt_writeObjData_Position")
@@ -380,13 +377,6 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		layout.prop(writeObjDataTab, "opt_writeObjData_Scale")
 		layout.prop(writeObjDataTab, "opt_writeObjData_Bones")
 
-		# check if bool property is enabled
-		#if (writeObjDataTab.opt_writeObjData == "OFF"):
-		#    print ("Property Disabled")
-		# else:
-		#    print ("Property Enabled, Format = ", writeObjDataTab.opt_writeObjData)
-
-		print ( "Hello World! Creating the list!" )
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
 		# with no custom draw code, use "UI_UL_list").
