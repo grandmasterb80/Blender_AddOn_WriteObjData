@@ -210,6 +210,12 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 		default = False
 	)
 
+	opt_writeObjData_Animated : bpy.props.BoolProperty(
+		name="Animated",
+		description="Write animated data of an object.",
+		default = False
+	)
+
 # ------------------------------------------------------------------------
 #    UIList to list all the object for which the object data
 #    will be written to a file.
@@ -418,6 +424,8 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Scale")
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Bones")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Animated")
+
 # ------------------------------------------------------------------------
 #    New options Object Properties->Output Object Data->Write Object Data
 #    List of objects for which data has to be written.
@@ -456,6 +464,7 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Scale")
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Bones")
+		layout.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
