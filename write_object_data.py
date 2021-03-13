@@ -34,16 +34,16 @@
 #
 
 bl_info = {
-	"name": "tester",
-	"description": "",
-	"author": "poor",
-	"version": (0, 0, 1),
+	"name": "Write Object Data / Annotation / Ground Truth",
+	"description": "Addon that allows to write object data to ",
+	"author": "Daniel Baudisch",
+	"version": (0, 1, 0),
 	"blender": (2, 80, 0),
-	"location": "UV/Image Editor > Tool Shelf (T)",
+	"location": "Properties > Output Properties > Write Object Data; and Properties > Object Properties > Write Object Data",
 	"warning": "", # used for warning icon and text in addons panel
-	"wiki_url": "",
+	"wiki_url": "https://github.com/grandmasterb80/Blender_AddOn_WriteObjData",
 	"tracker_url": "",
-	"category": "Test"
+	"category": "Object"
 }
 
 import bpy
