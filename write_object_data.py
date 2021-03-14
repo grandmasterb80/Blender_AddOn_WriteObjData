@@ -92,7 +92,6 @@ def update_opt_writeObjDataObject(self, context):
 			iii = writeObjDataList[ -1 ]
 			iii.objectPtr = obj
 			iii.name = obj.name
-			iii.random_prop = ""
 	else:
 		index = 0
 		for e in writeObjDataList:
@@ -117,11 +116,6 @@ class ListItem(PropertyGroup):
 		name="Name",
 		description="Name of object",
 		default="Untitled" )
-
-	random_prop: StringProperty(
-		name="Property for future use",
-		description="",
-		default="" )
 
 # ------------------------------------------------------------------------
 
@@ -224,23 +218,6 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 class MATERIAL_UL_matslots_example(bpy.types.UIList):
 	"""List of objects for which the object data has to be written to a table after each render."""
 
-	#def draw_filter(self, context, layout):
-	#	"""UI code for the filtering/sorting/search area."""
-	#	layout.separator()
-	#	col = layout.column(align=True)
-	#	row = col.row(align=True)
-	#	row.prop(self, 'filter_name', text='', icon='VIEWZOOM')
-	#	row.prop(self, 'use_filter_invert', text='', icon='ARROW_LEFTRIGHT')
-	#	#helpers = bpy.types.UI_UL_list
-		# If our "items" collection was a collection of objects, we could sort by
-		# name like this.
-		#ordered = helpers.helper_funcs.sort_items_by_name(items, 'name')
-		# If the objects in our items collection had a custom int property, we could use it
-		# to sort them too.
-		#ordered = helpers.helper_funcs.sort_items_helper(items, lambda o: o.myaddon.myprop, True)
-
-
-
 	# The draw_item function is called for each item of the collection that is visible in the list.
 	#   data is the RNA object containing the collection,
 	#   item is the current drawn item of the collection,
@@ -254,15 +231,11 @@ class MATERIAL_UL_matslots_example(bpy.types.UIList):
 	#   Note: as index and flt_flag are optional arguments, you do not have to use/declare them here if you don't
 	#   need them.
 	def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-		print ( "class MATERIAL_UL_matslots_example(bpy.types.UIList)" );
 		current_scene = data
 
 		# We could write some code to decide which icon to use here...
 		custom_icon = 'OUTLINER_COLLECTION'
 
-		print ( "(list) Scene.name = ", current_scene.name );
-		print ( "data clas", data.__class__.__name__ );
-		print ( "item clas", item.__class__.__name__ );
 		# draw_item must handle the three layout types... Usually 'DEFAULT' and 'COMPACT' can share the same code.
 		if self.layout_type in {'DEFAULT', 'COMPACT'}:
 			# You should always start your row layout by a label (icon + text), or a non-embossed text field,
@@ -296,14 +269,11 @@ class LIST_OT_AddSelection(Operator):
 		for obj in context.selected_objects:
 			writeObjDataList = context.scene.writeObjDataList
 			if obj not in [sub.objectPtr for sub in writeObjDataList]:
-				#obj.writeObjDataTab.opt_writeObjDataObject_Enabled = True;
 				writeObjDataList.add()
 				iii = writeObjDataList[ -1 ]
 				iii.objectPtr = obj
-				print( "LIST_OT_AddSelection(Operator): ", obj.name )
 				iii.objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = True
 				iii.name = obj.name
-				iii.random_prop = ""
 
 		return{'FINISHED'} 
 
