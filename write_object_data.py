@@ -461,6 +461,10 @@ class object_delete_override(bpy.types.Operator):
 # ------------------------------------------------------------------------
 
 @persistent
+def write_object_data_start( scene ):
+	print("Log: def write_object_data_start( scene ).")
+
+@persistent
 def write_object_data( scene ):
 	if ( scene.writeObjDataTab.opt_writeObjData_Format != "OFF" ):
 		print("Log: Writing object data")
@@ -482,11 +486,6 @@ def write_object_data( scene ):
 @persistent
 def write_object_data_end( scene ):
 	print("Log: def write_object_data_end( scene ).")
-
-@persistent
-def write_object_data_start( scene ):
-	print("Log: def write_object_data_start( scene ).")
-
 
 # ------------------------------------------------------------------------
 #     Registration
