@@ -272,8 +272,8 @@ class LIST_OT_AddSelection(Operator):
 				writeObjDataList.add()
 				iii = writeObjDataList[ -1 ]
 				iii.objectPtr = obj
-				iii.objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = True
 				iii.name = obj.name
+				iii.objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = True
 
 		return{'FINISHED'} 
 
