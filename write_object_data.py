@@ -215,7 +215,7 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 #    will be written to a file.
 # ------------------------------------------------------------------------
 
-class UILIST_WriteObjList_Class(bpy.types.UIList):
+class OBJECT_UL_WriteObjList_Class(bpy.types.UIList):
 	"""List of objects for which the object data has to be written to a table after each render."""
 
 	# The draw_item function is called for each item of the collection that is visible in the list.
@@ -256,7 +256,7 @@ class UILIST_WriteObjList_Class(bpy.types.UIList):
 #    Operator to add current selection to the list
 # ------------------------------------------------------------------------
 
-class UILIST_WriteObjList_AddSelection(Operator):
+class OBJECT_UL_WriteObjList_AddSelection(Operator):
 	"""Add current selection to the list."""
 	bl_idname = "custom_def_list.add_selection"
 	bl_label = "Add current selection"
@@ -281,7 +281,7 @@ class UILIST_WriteObjList_AddSelection(Operator):
 #    Operator to delete an element from the list
 # ------------------------------------------------------------------------
 
-class UILIST_WriteObjList_DeleteItem(Operator):
+class OBJECT_UL_WriteObjList_DeleteItem(Operator):
 	"""Delete the selected item from the list."""
 	bl_idname = "custom_def_list.delete_item"
 	bl_label = "Deletes an item"
@@ -298,13 +298,13 @@ class UILIST_WriteObjList_DeleteItem(Operator):
 		if self.selection == "ALL":
 			while len( writeObjDataList ) > 0:
 				writeObjDataList[0].objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = False
-				print( "UILIST_WriteObjList_DeleteItem(Operator): ", writeObjDataList[0].objectPtr.name )
+				print( "OBJECT_UL_WriteObjList_DeleteItem(Operator): ", writeObjDataList[0].objectPtr.name )
 				writeObjDataList.remove(0)
 			context.scene.custom_index = 0 
 		else:
 			index = context.scene.custom_index
 			writeObjDataList[index].objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = False
-			print( "UILIST_WriteObjList_DeleteItem(Operator): ", writeObjDataList[index].objectPtr.name )
+			print( "OBJECT_UL_WriteObjList_DeleteItem(Operator): ", writeObjDataList[index].objectPtr.name )
 			writeObjDataList.remove(index)
 			context.scene.custom_index = min(max(0, index - 1), len(writeObjDataList) - 1)
 
@@ -314,7 +314,7 @@ class UILIST_WriteObjList_DeleteItem(Operator):
 #    Operator to move an element from the list
 # ------------------------------------------------------------------------
 
-class UILIST_WriteObjList_MoveItem(Operator):
+class OBJECT_UL_WriteObjList_MoveItem(Operator):
 	"""Move an item in the list."""
 	bl_idname = "custom_def_list.move_item"
 	bl_label = "Move an item in the list"
@@ -373,7 +373,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
 		# with no custom draw code, use "UI_UL_list").
 		layout.template_list(
-			"UILIST_WriteObjList_Class",
+			"OBJECT_UL_WriteObjList_Class",
 			"custom_def_list",
 			scene,
 			"writeObjDataList",
@@ -493,10 +493,10 @@ def write_object_data_end( scene ):
 
 classes = (
 	ListItem,
-	UILIST_WriteObjList_Class,
-	UILIST_WriteObjList_DeleteItem,
-	UILIST_WriteObjList_AddSelection,
-	UILIST_WriteObjList_MoveItem,
+	OBJECT_UL_WriteObjList_Class,
+	OBJECT_UL_WriteObjList_DeleteItem,
+	OBJECT_UL_WriteObjList_AddSelection,
+	OBJECT_UL_WriteObjList_MoveItem,
 	WriteObjDataOutputPropertySettings,
 	ObjWriteDataOptionsPropertySettings,
 	WriteObjDataOutputOptionsPropertySettings,
