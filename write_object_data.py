@@ -550,8 +550,9 @@ def register():
 
 	# register 'on render' handler
 	# bpy.app.handlers.render_write.append(write_object_data)
-	bpy.app.handlers.render_complete.append(write_object_data_end)
+	# bpy.app.handlers.render_pre.append(write_object_data_start)
 	bpy.app.handlers.render_init.append(write_object_data_start)
+	bpy.app.handlers.render_complete.append(write_object_data_end)
 	bpy.app.handlers.render_post.append(write_object_data)
 	# bpy.app.handlers.frame_change_pre.append(my_handler)
 
