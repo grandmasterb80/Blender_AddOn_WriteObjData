@@ -504,7 +504,7 @@ def register():
 	bpy.types.Scene.writeObjDataTab = PointerProperty(type=WriteObjDataOutputPropertySettings)
 	bpy.types.Scene.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
 	bpy.types.Scene.writeObjDataList = CollectionProperty(type = ListItem)
-	bpy.types.Scene.custom_index = IntProperty(name = "Index for writeObjDataList", default = 0)
+	bpy.types.Scene.writeObjDataIndex = IntProperty(name = "Index for writeObjDataList", default = 0)
 
 	bpy.types.Object.writeObjDataTab = PointerProperty(type=ObjWriteDataOptionsPropertySettings)
 	bpy.types.Object.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
