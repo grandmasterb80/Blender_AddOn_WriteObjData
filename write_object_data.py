@@ -164,7 +164,7 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 		default = True,
 		options = {'HIDDEN'},
 		update = update_opt_writeObjDataObject
-		)
+	)
 
 	opt_writeObjDataObject_Overwrite : bpy.props.BoolProperty(
 		name="Overwrite Default Write Object Data",
@@ -246,13 +246,15 @@ class OBJECT_UL_WriteObjList_Class(bpy.types.UIList):
 			# Note "data" names should never be translated!
 			if item:
 				layout.prop(item, "name", text="", emboss=False, icon_value=icon)
-				layout.label(text="vier fünf sechs", translate=False, icon_value=icon)
-			else:
-				layout.label(text="eins zwei drei", translate=False, icon_value=icon)
+				#layout.label(text="-", translate=False, icon_value=icon)
+			#else:
+				#layout.label(text="-", translate=False, icon_value=icon)
 		# 'GRID' layout type should be as compact as possible (typically a single icon!).
 		elif self.layout_type in {'GRID'}:
 			layout.alignment = 'CENTER'
-			layout.label(text="", icon_value=icon)
+			if item:
+				layout.prop(item, "name", text="", emboss=False, icon_value=icon)
+			#layout.label(text="", icon_value=icon)
 
 # ------------------------------------------------------------------------
 #    Operator to add current selection to the list
@@ -363,10 +365,8 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 	def draw(self, context):
 		layout = self.layout
 		scene = bpy.context.scene
-		#scn = bpy.data
 		writeObjDataTab = scene.writeObjDataTab
 		writeObjDataOpt = scene.writeObjDataOpt
-		#objs = scn.objects
 
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjData_Format")
