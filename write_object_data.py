@@ -424,22 +424,21 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 # ------------------------------------------------------------------------
 
 class object_delete_override(bpy.types.Operator):
-    """delete objects and their derivatives"""
-    bl_idname = "object.delete"
-    bl_label = "Object Delete Operator"
+	"""delete objects and their derivatives"""
+	bl_idname = "object.delete"
+	bl_label = "Object Delete Operator"
 
-    @classmethod
-    def poll(cls, context):
-        return context.active_object is not None
 
-    def execute(self, context):
-        for obj in context.selected_objects:
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None
 
-            # replace with your function:
-            remove_from_obj_write_data_list(context, obj)
-
-            bpy.data.objects.remove(obj)
-        return {'FINISHED'}
+	def execute(self, context):
+		for obj in context.selected_objects:
+			# replace with your function:
+			remove_from_obj_write_data_list(context, obj)
+		bpy.data.objects.remove(obj)
+		return {'FINISHED'}
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
