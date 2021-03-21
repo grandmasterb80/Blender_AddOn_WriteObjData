@@ -419,12 +419,6 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		writeObjDataTab = obj.writeObjDataTab
 		writeObjDataOpt = obj.writeObjDataOpt
 
-		row = layout.row()
-		if obj is not None:
-			row.label(text="Active object is: " + obj.name)
-			row = layout.row()
-			row.prop(obj, "name")
-
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Enabled")
 
