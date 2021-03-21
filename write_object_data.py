@@ -18,21 +18,6 @@
 
 
 
-	# print("-------------------------------------------------")
-	# print("my test function", self, context)
-	# print("my test function", type(self), type(context.object))
-	# print("my test function", obj.name)
-	# for attr in dir(obj):
-		# print("obj.%s = %r" % (attr, getattr(obj, attr) ) )
-	# print("my test function", obj.name)
-	# print("my test function", obj["opt_writeObjDataObject"])
-	# print("my test function", obj.opt_writeObjDataObject)
-	# print("my test function", obj.parent)
-#
-#
-#
-#
-
 bl_info = {
 	"name": "Write Object Data / Annotation / Ground Truth",
 	"description": "Addon that allows to write object data to ",
