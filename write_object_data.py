@@ -70,35 +70,6 @@ from bpy.app.handlers import persistent
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 
-def remove_from_obj_write_data_list(context, obj):
-	print ("remove_from_obj_write_data_list")
-	writeObjDataList = context.scene.writeObjDataList
-	index = 0
-	for e in writeObjDataList:
-		if e.objectPtr == obj:
-			writeObjDataList.remove(index)
-			return
-		index = index + 1
-
-# ------------------------------------------------------------------------
-# ------------------------------------------------------------------------
-
-def update_opt_writeObjDataObject(self, context):
-	obj = context.object
-	writeObjDataList = context.scene.writeObjDataList
-	if obj.writeObjDataTab.opt_writeObjDataObject_Enabled:
-		if self not in [sub.objectPtr for sub in writeObjDataList]:
-			writeObjDataList.add()
-			iii = writeObjDataList[ -1 ]
-			iii.objectPtr = obj
-			iii.name = obj.name
-	else:
-		index = 0
-		for e in writeObjDataList:
-			if e.objectPtr == obj:
-				writeObjDataList.remove(index)
-				return
-			index = index + 1
 
 # ------------------------------------------------------------------------
 #    Class to define a single element in the write-object-data-list
@@ -158,6 +129,32 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 # ------------------------------------------------------------------------
 
 class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
+	def update_opt_writeObjDataObject(self, context):
+		obj = context.object
+		writeObjDataList = context.scene.writeObjDataList
+
+		if obj.writeObjDataTab.opt_writeObjDataObject_Enabled:
+			if self not in [sub.objectPtr for sub in writeObjDataList]:
+				writeObjDataList.add()
+				iii = writeObjDataList[ -1 ]
+				iii.objectPtr = obj
+				iii.name = obj.name
+		else:
+			index = 0
+			for e in writeObjDataList:
+				if e.objectPtr == obj:
+					writeObjDataList.remove(index)
+					return
+				index = index + 1
+
+	def ObjWriteDataOptionsUpdateSettings(self, context):
+		obj = context.object
+		obj.h.active = obj.writeObjDataTab.opt_writeObjDataObject_UseGlobal
+		if self.opt_writeObjDataObject_UseGlobal:
+			print("Option enabled")
+		else:
+			print("Option disabled")
+
 	opt_writeObjDataObject_Enabled : bpy.props.BoolProperty(
 		name="Write Object Data",
 		description="If enabled, then the object data of this object will be written to a CSV file. Remark: Properties->Output->Write Object Data->Write Object Data has to be enabled",
