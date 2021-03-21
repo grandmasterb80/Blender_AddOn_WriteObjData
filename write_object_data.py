@@ -470,14 +470,37 @@ class object_delete_override(bpy.types.Operator):
 		return {'FINISHED'}
 
 # ------------------------------------------------------------------------
+# Functions to handle start / post and complete handler
 # ------------------------------------------------------------------------
 
 @persistent
 def write_object_data_start( scene ):
+	print("---------------------------------------------------------------------------")
+	print("---------------------------------------------------------------------------")
+	print("---------------------------------------------------------------------------")
+	print("---------------------------------------------------------------------------")
+	print("START - START - START - START - START - START - START - START - START - START")
 	print("Log: def write_object_data_start( scene ).")
+	scene.writeObjDataTemp.hello_world = 1
+	scene.writeObjDataTemp.test = 2
+	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
+	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 
 @persistent
 def write_object_data( scene ):
+	# current camera: scene.camera
+	# current frame:  scene.frame_current
+	# first frame:  scene.frame_start
+	# last frame:  scene.frame_end
+	# step size:  scene.frame_step
+	print("---------------------------------------------------------------------------")
+	print("WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE")
+
+	# print("Log: def write_object_data_data( scene ).")
+	scene.writeObjDataTemp.hello_world = scene.writeObjDataTemp.hello_world + 1
+	scene.writeObjDataTemp.test = scene.writeObjDataTemp.test + 2
+	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
+	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 	# if ( scene.writeObjDataTab.opt_writeObjData_Format != "OFF" ):
 		# print("Log: Writing object data")
 		# print("(C) Frame Change", scene.frame_current)
@@ -497,7 +520,14 @@ def write_object_data( scene ):
 
 @persistent
 def write_object_data_end( scene ):
-	print("Log: def write_object_data_end( scene ).")
+	print("---------------------------------------------------------------------------")
+	print("COMPLETE - COMPLETE - COMPLETE - COMPLETE - COMPLETE - COMPLETE - COMPLETE - COMPLETE")
+	first_frame = scene.frame_start
+	last_frame = scene.frame_end
+	current_frame = scene.current_frame
+	print("Log: def write_object_data_end( scene ). Frames [", first_frame, ", ", last_frame, "]; current = ", current_frame)
+	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
+	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 
 # ------------------------------------------------------------------------
 #     Registration
