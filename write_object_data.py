@@ -515,16 +515,23 @@ def unregister():
 	for cls in reversed(classes):
 		unregister_class(cls)
 
-	if write_object_data in bpy.app.handlers.render_write:
-		bpy.app.handlers.render_write.remove( write_object_data )
-	if write_object_data in bpy.app.handlers.render_complete:
-		bpy.app.handlers.render_complete.remove( write_object_data )
-	if write_object_data in bpy.app.handlers.render_pre:
-		bpy.app.handlers.render_pre.remove( write_object_data )
-	if write_object_data in bpy.app.handlers.render_post:
-		bpy.app.handlers.render_post.remove( write_object_data )
-	if write_object_data in bpy.app.handlers.frame_change_pre:
-		bpy.app.handlers.frame_change_pre.remove( write_object_data )
+	handler_list = [
+		bpy.app.handlers.render_init,
+		bpy.app.handlers.render_write,
+		bpy.app.handlers.render_complete,
+		bpy.app.handlers.render_pre,
+		bpy.app.handlers.render_post,
+		bpy.app.handlers.frame_change_pre
+	]
+	handler_fns = [
+		write_object_data_start,
+		write_object_data,
+		write_object_data_end
+	]
+	for fn in handler_fns:
+		for hn in handler_list:
+			if fn in hn:
+				hn.remove( fn )
 
 	del bpy.types.Object.writeObjDataTab
 
