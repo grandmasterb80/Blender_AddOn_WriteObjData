@@ -516,10 +516,10 @@ def write_object_data( scene ):
 def write_object_data_end( scene ):
 	print("---------------------------------------------------------------------------")
 	print("COMPLETE - COMPLETE - COMPLETE - COMPLETE - COMPLETE - COMPLETE - COMPLETE - COMPLETE")
-	first_frame = scene.frame_start
-	last_frame = scene.frame_end
-	current_frame = scene.current_frame
-	print("Log: def write_object_data_end( scene ). Frames [", first_frame, ", ", last_frame, "]; current = ", current_frame)
+	frame_start = scene.frame_start
+	frame_last = scene.frame_end
+	frame_current = scene.frame_current
+	print("Log: def write_object_data_end( scene ). Frames [", frame_start, ", ", frame_last, "]; current = ", frame_current)
 	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
 	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 
