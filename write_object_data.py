@@ -138,6 +138,19 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		options = {'HIDDEN'},
 		default = "OFF"
 	)
+
+	coord_options = [
+		("CAM", "Camera Coord", '', 0),
+		("WOR", "World Coord", '', 1),
+		("CAW", "Camera and World", '', 2),
+	]
+
+	opt_writeObjData_Coord : bpy.props.EnumProperty(
+		name = "Coord",
+		items = coord_options,
+		description = "Coordinates will transformed into the selected coordinate system before they are written to the target file.",
+		options = {'HIDDEN'},
+		default = "CAM"
 	)
 
 # ------------------------------------------------------------------------
@@ -163,20 +176,6 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 # ------------------------------------------------------------------------
 
 class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
-	coord_options = [
-		("CAM", "Camera Coord", '', 0),
-		("WOR", "World Coord", '', 1),
-		("CAW", "Camera and World", '', 2),
-	]
-
-	opt_writeObjData_Coord : bpy.props.EnumProperty(
-		name = "Coord",
-		items = coord_options,
-		description = "Coordinates will transformed into the selected coordinate system before they are written to the target file.",
-		default = "CAM",
-		update = execute_operator
-	)
-
 	opt_writeObjData_Position : bpy.props.BoolProperty(
 		name="Position",
 		description="Write the position of an oobject.",
@@ -365,6 +364,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjData_Format")
+		layout.prop(writeObjDataTab, "opt_writeObjData_Coord")
 
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
@@ -386,7 +386,6 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		row.operator('custom_def_list.move_item', text='Mv Up').direction = 'UP'
 		row.operator('custom_def_list.move_item', text='Mv Down').direction = 'DOWN'
 
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Coord")
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Position")
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		layout.prop(writeObjDataOpt, "opt_writeObjData_Scale")
