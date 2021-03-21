@@ -380,9 +380,9 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjData_Format")
-		layout.prop(writeObjDataTab, "opt_writeObjData_Coord")
 
 		h2 = layout.column()
+		h2.prop(writeObjDataTab, "opt_writeObjData_Coord")
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
 		# with no custom draw code, use "UI_UL_list").
