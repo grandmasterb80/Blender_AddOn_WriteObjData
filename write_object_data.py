@@ -449,22 +449,22 @@ def write_object_data_start( scene ):
 
 @persistent
 def write_object_data( scene ):
-	if ( scene.writeObjDataTab.opt_writeObjData_Format != "OFF" ):
-		print("Log: Writing object data")
-		print("(C) Frame Change", scene.frame_current)
-		print("(C) Load Handler:", bpy.data.filepath)
-		for obj in bpy.data.objects:
-			print( "(C) Name:", obj.name )
-			print( "(C) Bound Box:", obj.bound_box )
-			print( "(C) Dimensions:", obj.dimensions )
-			print( "(C) Locataion:", obj.location )
-			print( "(C) Rotation Euler:", obj.rotation_euler )
-			print( "(C) Rotation Mode:", obj.rotation_mode )
-			print( "(C) Rotation Quaternion:", obj.rotation_quaternion )
-			print( "(C) Scale:", obj.scale )
-			print( "(C) ------------" )
-	else:
-		print("Log: Writing object data disabled.")
+	# if ( scene.writeObjDataTab.opt_writeObjData_Format != "OFF" ):
+		# print("Log: Writing object data")
+		# print("(C) Frame Change", scene.frame_current)
+		# print("(C) Load Handler:", bpy.data.filepath)
+		# for obj in bpy.data.objects:
+			# print( "(C) Name:", obj.name )
+			# print( "(C) Bound Box:", obj.bound_box )
+			# print( "(C) Dimensions:", obj.dimensions )
+			# print( "(C) Locataion:", obj.location )
+			# print( "(C) Rotation Euler:", obj.rotation_euler )
+			# print( "(C) Rotation Mode:", obj.rotation_mode )
+			# print( "(C) Rotation Quaternion:", obj.rotation_quaternion )
+			# print( "(C) Scale:", obj.scale )
+			# print( "(C) ------------" )
+		# else:
+			# print("Log: Writing object data disabled.")
 
 @persistent
 def write_object_data_end( scene ):
