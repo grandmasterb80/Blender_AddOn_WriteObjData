@@ -162,6 +162,7 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 		name="Write Object Data",
 		description="If enabled, then the object data of this object will be written to a CSV file. Remark: Properties->Output->Write Object Data->Write Object Data has to be enabled",
 		default = True,
+		options = {'HIDDEN'},
 		update = update_opt_writeObjDataObject
 		)
 
@@ -179,30 +180,35 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 	opt_writeObjData_Position : bpy.props.BoolProperty(
 		name="Position",
 		description="Write the position of an oobject.",
+		options = {'HIDDEN'},
 		default = True
 	)
 
 	opt_writeObjData_Rotation : bpy.props.BoolProperty(
 		name="Rotation",
 		description="Write the rotation of an object.",
+		options = {'HIDDEN'},
 		default = True
 	)
 
 	opt_writeObjData_Scale : bpy.props.BoolProperty(
 		name="Scale",
 		description="Write the scale of an object.",
+		options = {'HIDDEN'},
 		default = False
 	)
 
 	opt_writeObjData_Bones : bpy.props.BoolProperty(
 		name="Bones",
 		description="Write the bone data of an object.",
+		options = {'HIDDEN'},
 		default = False
 	)
 
 	opt_writeObjData_Animated : bpy.props.BoolProperty(
 		name="Animated",
 		description="Write animated data of an object.",
+		options = {'HIDDEN'},
 		default = False
 	)
 
