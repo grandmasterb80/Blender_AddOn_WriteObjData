@@ -110,18 +110,14 @@ class ListItem(PropertyGroup):
 	#name = StringProperty() -> Instantiated by default
 	objectPtr: PointerProperty(
 		name="Object",
-		type=bpy.types.Object )
+		type=bpy.types.Object
+	)
 
 	name: StringProperty(
 		name="Name",
 		description="Name of object",
-		default="Untitled" )
-
-# ------------------------------------------------------------------------
-
-def execute_operator(self, context):
-	print("********************* Hello World *********************")
-	print("Option selected: ", self.opt_writeObjData)
+		default="Untitled"
+	)
 
 # ------------------------------------------------------------------------
 #    Store properties for the "Output Object Data" in the active scene
@@ -139,8 +135,9 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		name = "Format",
 		items = mode_options,
 		description = "If enabled, then data of objects for which Properties->Object Properties->Write Object Data->Enabled is selected, will be written in the selected format.",
-		default = "OFF",
-		update = execute_operator
+		options = {'HIDDEN'},
+		default = "OFF"
+	)
 	)
 
 # ------------------------------------------------------------------------
