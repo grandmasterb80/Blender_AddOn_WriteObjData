@@ -160,11 +160,13 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 		update = update_opt_writeObjDataObject
 	)
 
-	opt_writeObjDataObject_Overwrite : bpy.props.BoolProperty(
-		name="Overwrite Default Write Object Data",
-		description="If enabled, then the data that is written for this object is determined by the options below. If this option is not selected, the data that is written is determined by the options in Properties->Output->Write Object Data",
-		default = False
-		)
+	opt_writeObjDataObject_UseGlobal : bpy.props.BoolProperty(
+		name="Use Global Settings",
+		description="If enabled, then the data that is written for this object is determined by the options in Properties > Output Properties > Write Object Data. If this option is not selected, the data that is written is determined by the options below.",
+		default = True,
+		options = {'HIDDEN'},
+		update = ObjWriteDataOptionsUpdateSettings
+	)
 
 # ------------------------------------------------------------------------
 #    Common properties for the "Write Object Data" for output and object property 
@@ -428,10 +430,10 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 
 		h1 = layout.column()
 		h1.active = writeObjDataTab.opt_writeObjDataObject_Enabled
-		h1 .prop(writeObjDataTab, "opt_writeObjDataObject_Overwrite")
+		h1 .prop(writeObjDataTab, "opt_writeObjDataObject_UseGlobal")
 
 		h2 = h1.column()
-		h2.active = not writeObjDataTab.opt_writeObjDataObject_Overwrite
+		h2.active = not writeObjDataTab.opt_writeObjDataObject_UseGlobal
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Position")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
