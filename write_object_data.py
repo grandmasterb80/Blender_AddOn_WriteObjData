@@ -53,8 +53,20 @@ from bpy.app.handlers import persistent
 
 
 # ------------------------------------------------------------------------
+#    Class to define a single element in the write-object-data-list
 # ------------------------------------------------------------------------
 
+class TestTest(PropertyGroup):
+	hello_world: IntProperty(
+		name="Hello_World",
+		description="Name of object",
+		default=1
+	)
+	test: IntProperty(
+		name="TestVariable",
+		description="Name of object",
+		default=2
+	)
 
 # ------------------------------------------------------------------------
 #    Class to define a single element in the write-object-data-list
@@ -495,6 +507,7 @@ classes = (
 	OBJECT_UL_WriteObjList_DeleteItem,
 	OBJECT_UL_WriteObjList_AddSelection,
 	OBJECT_UL_WriteObjList_MoveItem,
+	TestTest,
 	WriteObjDataOutputPropertySettings,
 	ObjWriteDataOptionsPropertySettings,
 	WriteObjDataOutputOptionsPropertySettings,
@@ -516,6 +529,7 @@ def register():
 	bpy.app.handlers.render_post.append(write_object_data)
 	# bpy.app.handlers.frame_change_pre.append(my_handler)
 
+	bpy.types.Scene.writeObjDataTemp = PointerProperty(type = TestTest)
 	bpy.types.Scene.writeObjDataTab = PointerProperty(type=WriteObjDataOutputPropertySettings)
 	bpy.types.Scene.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
 	bpy.types.Scene.writeObjDataList = CollectionProperty(type = ListItem)
@@ -553,6 +567,7 @@ def unregister():
 	del bpy.types.Scene.writeObjDataList
 	del bpy.types.Scene.writeObjDataIndex
 	del bpy.types.Scene.writeObjDataTab
+	del bpy.types.Scene.writeObjDataTemp
 
 
 if __name__ == "__main__":
