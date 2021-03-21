@@ -250,7 +250,7 @@ class OBJECT_UL_WriteObjList_AddSelection(Operator):
 	@classmethod
 	def poll(cls, context):
 		return context.selected_objects
-	
+
 	def execute(self, context):
 		for obj in context.selected_objects:
 			writeObjDataList = context.scene.writeObjDataList
@@ -277,7 +277,7 @@ class OBJECT_UL_WriteObjList_DeleteItem(Operator):
 	@classmethod
 	def poll(cls, context):
 		return context.scene.writeObjDataList
-	
+
 	def execute(self, context):
 		writeObjDataList = context.scene.writeObjDataList
 		print ("writeObjDataList class", writeObjDataList.__class__.__name__)
@@ -310,7 +310,7 @@ class OBJECT_UL_WriteObjList_MoveItem(Operator):
 	@classmethod
 	def poll(cls, context):
 		return context.scene.writeObjDataList
-	
+
 	def move_index(self):
 		""" Move index of an item render queue while clamping it. """
 		index = bpy.context.scene.writeObjDataIndex
