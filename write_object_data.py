@@ -69,6 +69,20 @@ class TestTest(PropertyGroup):
 	)
 
 # ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+def dump_obj(obj):
+	for attr in dir(obj):
+		try:
+			print("obj.%s = %r" % (attr, getattr(obj, attr)))
+		except AttributeError:
+			print("obj.%s not available" % attr)
+
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------
 #    Class to define a single element in the write-object-data-list
 # ------------------------------------------------------------------------
 
@@ -495,6 +509,7 @@ def write_object_data( scene ):
 	scene.writeObjDataTemp.test = scene.writeObjDataTemp.test + 2
 	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
 	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
+	dump_obj(scene.render)
 	# if ( scene.writeObjDataTab.opt_writeObjData_Format != "OFF" ):
 		# print("Log: Writing object data")
 		# print("(C) Frame Change", scene.frame_current)
