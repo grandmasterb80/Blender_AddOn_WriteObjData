@@ -286,13 +286,13 @@ class OBJECT_UL_WriteObjList_DeleteItem(Operator):
 				writeObjDataList[0].objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = False
 				print( "OBJECT_UL_WriteObjList_DeleteItem(Operator): ", writeObjDataList[0].objectPtr.name )
 				writeObjDataList.remove(0)
-			context.scene.custom_index = 0 
+			context.scene.writeObjDataIndex = 0
 		else:
-			index = context.scene.custom_index
+			index = context.scene.writeObjDataIndex
 			writeObjDataList[index].objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = False
 			print( "OBJECT_UL_WriteObjList_DeleteItem(Operator): ", writeObjDataList[index].objectPtr.name )
 			writeObjDataList.remove(index)
-			context.scene.custom_index = min(max(0, index - 1), len(writeObjDataList) - 1)
+			context.scene.writeObjDataIndex = min(max(0, index - 1), len(writeObjDataList) - 1)
 
 		return{'FINISHED'} 
 
@@ -313,16 +313,16 @@ class OBJECT_UL_WriteObjList_MoveItem(Operator):
 	
 	def move_index(self):
 		""" Move index of an item render queue while clamping it. """
-		index = bpy.context.scene.custom_index
+		index = bpy.context.scene.writeObjDataIndex
 		list_length = len(bpy.context.scene.writeObjDataList) - 1
 
 		# (index starts at 0)
 		new_index = index + (-1 if self.direction == 'UP' else 1)
-		bpy.context.scene.custom_index = max(0, min(new_index, list_length))
+		bpy.context.scene.writeObjDataIndex = max(0, min(new_index, list_length))
 
 	def execute(self, context):
 		writeObjDataList = context.scene.writeObjDataList
-		index = context.scene.custom_index
+		index = context.scene.writeObjDataIndex
 		neighbor = index + (-1 if self.direction == 'UP' else 1)
 		writeObjDataList.move(neighbor, index)
 		self.move_index()
@@ -363,7 +363,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 			scene,
 			"writeObjDataList",
 			scene,
-			"custom_index"
+			"writeObjDataIndex"
 			)
 	
 		row = layout.row()
