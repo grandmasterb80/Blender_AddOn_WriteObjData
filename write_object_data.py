@@ -354,10 +354,11 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		layout.prop(writeObjDataTab, "opt_writeObjData_Format")
 		layout.prop(writeObjDataTab, "opt_writeObjData_Coord")
 
+		h2 = layout.column()
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
 		# with no custom draw code, use "UI_UL_list").
-		layout.template_list(
+		h2.template_list(
 			"OBJECT_UL_WriteObjList_Class",
 			"custom_def_list",
 			scene,
@@ -366,7 +367,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 			"writeObjDataIndex"
 			)
 	
-		row = layout.row()
+		row = h2.row()
 		#row.operator('writeObjDataList.new_item', text='NEW')
 		row.operator('custom_def_list.delete_item', text='Rem All').selection = 'ALL'
 		row.operator('custom_def_list.delete_item', text='Rem Sel').selection = 'SELECTION'
@@ -374,11 +375,12 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		row.operator('custom_def_list.move_item', text='Mv Up').direction = 'UP'
 		row.operator('custom_def_list.move_item', text='Mv Down').direction = 'DOWN'
 
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Position")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Scale")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Bones")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Animated")
+		h2.active = writeObjDataTab.opt_writeObjData_Format != "OFF"
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Position")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 
 # ------------------------------------------------------------------------
 #    New options Object Properties->Output Object Data->Write Object Data
@@ -411,14 +413,18 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 
 		# display the properties
 		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Enabled")
-		layout.prop(writeObjDataTab, "opt_writeObjDataObject_Overwrite")
 
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Coord")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Position")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Scale")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Bones")
-		layout.prop(writeObjDataOpt, "opt_writeObjData_Animated")
+		h1 = layout.column()
+		h1.active = writeObjDataTab.opt_writeObjDataObject_Enabled
+		h1 .prop(writeObjDataTab, "opt_writeObjDataObject_Overwrite")
+
+		h2 = h1.column()
+		h2.active = not writeObjDataTab.opt_writeObjDataObject_Overwrite
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Position")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
