@@ -51,6 +51,7 @@ from bpy.types import (Panel,
 
 from bpy.app.handlers import persistent
 
+from pprint import pprint
 
 # ------------------------------------------------------------------------
 #    Class to define a single element in the write-object-data-list
@@ -391,6 +392,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		h2 = layout.column()
 		h2.prop(writeObjDataTab, "opt_writeObjData_Coord")
 		h2.prop(writeObjDataTab, "opt_writeObData_Filename")
+
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
 		# with no custom draw code, use "UI_UL_list").
@@ -512,12 +514,25 @@ def write_object_data( scene ):
 	print("---------------------------------------------------------------------------")
 	print("WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE")
 
+	frame_start = scene.frame_start
+	frame_last = scene.frame_end
+	frame_current = scene.frame_current
+
 	# print("Log: def write_object_data_data( scene ).")
 	scene.writeObjDataTemp.hello_world = scene.writeObjDataTemp.hello_world + 1
 	scene.writeObjDataTemp.test = scene.writeObjDataTemp.test + 2
 	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
 	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
+	print("scene.render.filepath = ", scene.render.filepath)
+	print("scene.render.filepath = ", scene.writeObjDataTab.opt_writeObData_Filename)
+	x = "%s%05d.csv" % (scene.writeObjDataTab.opt_writeObData_Filename,frame_current,)
+	print("scene.render.filepath = ", x)
+
+	#print("bpy.types.CompositorNodeOutputFile = ", bpy.types.CompositorNodeOutputFile().base_path)
 	dump_obj(scene.render)
+	#pprint( vars( scene ) )
+	#for l in dir(scene):
+
 	# if ( scene.writeObjDataTab.opt_writeObjData_Format != "OFF" ):
 		# print("Log: Writing object data")
 		# print("(C) Frame Change", scene.frame_current)
