@@ -536,7 +536,7 @@ def unregister():
 	del bpy.types.Object.writeObjDataTab
 
 	del bpy.types.Scene.writeObjDataList
-	del bpy.types.Scene.custom_index
+	del bpy.types.Scene.writeObjDataIndex
 	del bpy.types.Scene.writeObjDataTab
 
 
