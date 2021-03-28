@@ -556,12 +556,45 @@ def write_object_data( scene ):
 	# print("Log: def write_object_data_data( scene ).")
 	scene.writeObjDataTemp.hello_world = scene.writeObjDataTemp.hello_world + 1
 	scene.writeObjDataTemp.test = scene.writeObjDataTemp.test + 2
+	renderFileName = scene.render.frame_path(frame = frame_current)
+	print ("renderFileName = ", renderFileName)
 	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
 	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 	print("scene.render.filepath = ", scene.render.filepath)
 	print("scene.render.filepath = ", scene.writeObjDataTab.opt_writeObData_Filename)
 	x = "%s%05d.csv" % (scene.writeObjDataTab.opt_writeObData_Filename,frame_current,)
 	print("scene.render.filepath = ", x)
+	print("------")
+	# print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
+	# print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
+	# print("scene.render.filepath = ", scene.render.filepath)
+	# print("scene.render.filepath = ", scene.render.path_from_id())
+	# print("scene.render.filepath = ", scene.render.frame_path(frame = frame_current))
+	# print("scene.render.filepath = ", scene.writeObjDataTab.opt_writeObData_Filename)
+	# x = "%s%05d.csv" % (scene.writeObjDataTab.opt_writeObData_Filename,frame_current,)
+	# print("scene.render.filepath = ", x)
+	fileOutputNodes = [ c for c in scene.node_tree.nodes if c.bl_idname == "CompositorNodeOutputFile" ] 
+	for node in fileOutputNodes:
+		for value in node.file_slots.values(): 
+			ext = value.format.file_format
+			p = os.path.join( node.base_path, value.path + "." + ext )
+			print ( "Another output file = ", p )
+			#print ( "Another output file = ", value.path )
+			
+	print("------")
+
+	if scene.writeObjDataTab.opt_writeObjData_Format == "OFF":
+		# nothing to do
+		pass
+	elif scene.writeObjDataTab.opt_writeObjData_Format == "CSV":
+		print( "CSV object data output not implemented, yet" )
+	elif scene.writeObjDataTab.opt_writeObjData_Format == "VOC":
+		print( "VOC object data output not implemented, yet" )
+	elif scene.writeObjDataTab.opt_writeObjData_Format == "COCO":
+		print( "COCO object data output not implemented, yet" )
+		
+	else:
+		print( "Unknown object data output %. Please contact developer.", scene.writeObjDataTab.opt_writeObjData_Format )
 
 	#print("bpy.types.CompositorNodeOutputFile = ", bpy.types.CompositorNodeOutputFile().base_path)
 	dump_obj(scene.render)
