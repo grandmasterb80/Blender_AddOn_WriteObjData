@@ -16,5 +16,6 @@ The Addon will create entries in
 ** A list with objects for which data will be written.
 * Properties > Object Properties > Write Object Data
 
-
-TBD: Youtube Tutorial
+# ToDo Liste
+* Offer files written by CompositorNodeOutputFile as reference file in COCO file output
+* Youtube Tutorial
