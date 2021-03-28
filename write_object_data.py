@@ -295,10 +295,10 @@ class OBJECT_UL_WriteObjList_AddSelection(Operator):
 			writeObjDataList = context.scene.writeObjDataList
 			if obj not in [sub.objectPtr for sub in writeObjDataList]:
 				writeObjDataList.add()
-				iii = writeObjDataList[ -1 ]
-				iii.objectPtr = obj
-				iii.name = obj.name
-				iii.objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = True
+				newEl = writeObjDataList[ -1 ]
+				newEl.objectPtr = obj
+				newEl.name = obj.name
+				newEl.objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = True
 
 		return{'FINISHED'} 
 
