@@ -7,6 +7,9 @@
 # write_object_data.unregister()
 # importlib.reload(write_object_data)
 # write_object_data.register()
+
+# import sys; import os; import bpy; import importlib; mydir="C:\\Users\\danie\\Documents\\development\\github\\Blender_AddOn_WriteObjData\\"; sys.path.append( mydir ); import write_object_data; write_object_data.register()
+
 # write_object_data.unregister(); importlib.reload(write_object_data); write_object_data.register()
 #
 # or
