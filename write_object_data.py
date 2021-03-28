@@ -233,6 +233,20 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 		default = False
 	)
 
+	opt_writeObjData_bb3d : bpy.props.BoolProperty(
+		name="3D Bounding Box",
+		description="Write 3D bounding box data of an object.",
+		options = {'HIDDEN'},
+		default = False
+	)
+
+	opt_writeObjData_bb2d : bpy.props.BoolProperty(
+		name="2D Bounding Box",
+		description="Write 2D bounding box data of an object (always in image coordinates).",
+		options = {'HIDDEN'},
+		default = False
+	)
+
 # ------------------------------------------------------------------------
 #    UIList to list all the object for which the object data
 #    will be written to a file.
@@ -422,6 +436,9 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2d")
+
 
 # ------------------------------------------------------------------------
 #    New options Object Properties->Output Object Data->Write Object Data
@@ -460,6 +477,8 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2d")
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
