@@ -57,22 +57,6 @@ from bpy.app.handlers import persistent
 from pprint import pprint
 
 # ------------------------------------------------------------------------
-#    Class to define a single element in the write-object-data-list
-# ------------------------------------------------------------------------
-
-class TestTest(PropertyGroup):
-	hello_world: IntProperty(
-		name="Hello_World",
-		description="Name of object",
-		default=1
-	)
-	test: IntProperty(
-		name="TestVariable",
-		description="Name of object",
-		default=2
-	)
-
-# ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 def dump_obj(obj):
@@ -106,17 +90,28 @@ class ListItem(PropertyGroup):
 	)
 
 # ------------------------------------------------------------------------
+#    Enumeration of some options (mode has multiple use)
+# ------------------------------------------------------------------------
+
+mode_options = [
+	("OFF", "Off / No Output", '', 0),
+	("JSON", "Proprietary JSON", '', 1),
+	("CSV", "Comma Separated Value (CSV)", '', 2),
+	("VOC", "Pascal VOC", '', 3),
+	("COCO", "COCO", '', 4)
+]
+
+coord_options = [
+	("CAM", "Camera Coord", '', 0),
+	("WOR", "World Coord", '', 1),
+	("CAW", "Camera and World", '', 2),
+]
+
+# ------------------------------------------------------------------------
 #    Store properties for the "Output Object Data" in the active scene
 # ------------------------------------------------------------------------
 
 class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
-	mode_options = [
-		("OFF", "Off / No Output", '', 0),
-		("CSV", "Comma Separated Value (CSV)", '', 1),
-		("VOC", "Pascal VOC", '', 2),
-		("COCO", "COCO", '', 3)
-	]
-
 	opt_writeObjData_Format : bpy.props.EnumProperty(
 		name = "Format",
 		items = mode_options,
@@ -124,12 +119,6 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		options = {'HIDDEN'},
 		default = "OFF"
 	)
-
-	coord_options = [
-		("CAM", "Camera Coord", '', 0),
-		("WOR", "World Coord", '', 1),
-		("CAW", "Camera and World", '', 2),
-	]
 
 	opt_writeObjData_Coord : bpy.props.EnumProperty(
 		name = "Coord",
@@ -191,6 +180,29 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 		default = True,
 		options = {'HIDDEN'},
 		update = ObjWriteDataOptionsUpdateSettings
+	)
+
+# ------------------------------------------------------------------------
+#    Class to define a single element in the write-object-data-list
+# ------------------------------------------------------------------------
+
+class TestTest(PropertyGroup):
+	opt_writeObjData_Format : bpy.props.EnumProperty(
+		name = "Format",
+		items = mode_options,
+		default = "OFF"
+	)
+
+	hello_world: IntProperty(
+		name="Hello_World",
+		description="Name of object",
+		default=1
+	)
+
+	test: IntProperty(
+		name="TestVariable",
+		description="Name of object",
+		default=2
 	)
 
 # ------------------------------------------------------------------------
@@ -521,6 +533,7 @@ def write_object_data_start( scene ):
 	print("---------------------------------------------------------------------------")
 	print("START - START - START - START - START - START - START - START - START - START")
 	print("Log: def write_object_data_start( scene ).")
+	scene.writeObjDataTemp.opt_writeObjData_Format = scene.writeObjDataTab.opt_writeObjData_Format
 	scene.writeObjDataTemp.hello_world = 1
 	scene.writeObjDataTemp.test = 2
 	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
