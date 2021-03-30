@@ -548,7 +548,8 @@ def write_object_data( scene ):
 	# step size:  scene.frame_step
 	print("---------------------------------------------------------------------------")
 	print("WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE")
-
+	print("scene.writeObjDataTemp.opt_writeObjData_Format = ", scene.writeObjDataTemp.opt_writeObjData_Format)
+	print("scene.writeObjDataTab.opt_writeObjData_Format = ", scene.writeObjDataTab.opt_writeObjData_Format)
 	frame_start = scene.frame_start
 	frame_last = scene.frame_end
 	frame_current = scene.frame_current
@@ -558,12 +559,7 @@ def write_object_data( scene ):
 	scene.writeObjDataTemp.test = scene.writeObjDataTemp.test + 2
 	renderFileName = scene.render.frame_path(frame = frame_current)
 	print ("renderFileName = ", renderFileName)
-	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
-	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
-	print("scene.render.filepath = ", scene.render.filepath)
-	print("scene.render.filepath = ", scene.writeObjDataTab.opt_writeObData_Filename)
-	x = "%s%05d.csv" % (scene.writeObjDataTab.opt_writeObData_Filename,frame_current,)
-	print("scene.render.filepath = ", x)
+
 	print("------")
 	# print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
 	# print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
@@ -575,11 +571,19 @@ def write_object_data( scene ):
 	# print("scene.render.filepath = ", x)
 	fileOutputNodes = [ c for c in scene.node_tree.nodes if c.bl_idname == "CompositorNodeOutputFile" ] 
 	for node in fileOutputNodes:
-		for value in node.file_slots.values(): 
+		for value in node.file_slots.values():
+			f = value.path
+			frameStr = '{:0>4}'.format( frame_current )
 			ext = value.format.file_format
-			p = os.path.join( node.base_path, value.path + "." + ext )
-			print ( "Another output file = ", p )
-			#print ( "Another output file = ", value.path )
+			f = bpy.path.ensure_ext( f + frameStr + ".", ext )
+			p = node.base_path
+			(dr,pa) = os.path.splitdrive(p)
+			if not dr:
+				( mycd, _ ) = os.path.splitdrive( renderFileName )
+				p = os.path.join( mycd, p )
+			p = os.path.realpath( p )
+			p = os.path.join( p, f )
+			print ( "  7: Another output file = ", p )
 			
 	print("------")
 
