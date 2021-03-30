@@ -597,7 +597,7 @@ def write_object_data( scene ):
 		print( "Unknown object data output %. Please contact developer.", scene.writeObjDataTab.opt_writeObjData_Format )
 
 	#print("bpy.types.CompositorNodeOutputFile = ", bpy.types.CompositorNodeOutputFile().base_path)
-	dump_obj(scene.render)
+	#dump_obj(scene.render)
 	#pprint( vars( scene ) )
 	#for l in dir(scene):
 
