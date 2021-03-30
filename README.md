@@ -12,7 +12,8 @@ The Addon will create entries in
 *** rotation
 *** scale
 *** bones
-*** bounding box
+*** 3D bounding box
+*** 2D bounding box (camera coordinates)
 ** A list with objects for which data will be written.
 * Properties > Object Properties > Write Object Data
 
