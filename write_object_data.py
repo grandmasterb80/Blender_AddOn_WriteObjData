@@ -548,6 +548,55 @@ def write_object_data_start( scene ):
 	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 
 @persistent
+def helper_getFilename( basename, frameCounter, fileFormat ):
+	formatMap = {
+		"BMP": "bmp",
+		"IRIS": "iris",
+		"PNG": "png",
+		"JPEG": "jpeg",
+		"JPEG2000": "jpeg",
+		"JPG": "jpg",
+		"TARGA": "tga",
+		"TARGA_RAW": "tga",
+		"CINEON": "cin",
+		"DPX": "dpx",
+		"OPEN_EXR_MULTILAYER": "exr",
+		"OPEN_EXR": "exr",
+		"HDR": "hdr",
+		"TIFF": "tiff",
+		"AVI_JPEG": "avi",
+		"AVI_RAW": "avi",
+		"FFMPEG": "ffmpeg",
+		"JSON": "json",
+		"XML": "xml"
+	}
+	frameStr = '{:0>4}'.format( frameCounter )
+	ext = formatMap[ fileFormat ]
+	return bpy.path.ensure_ext( basename + frameStr + ".", ext )
+
+@persistent
+def helper_getPath( renderPathDrive, path ):
+	( dr, pa ) = os.path.splitdrive( path )
+	p = Path( path )
+	if not dr:
+		p = os.path.join( renderPathDrive, p )
+	return os.path.realpath( p )
+
+@persistent
+def helper_getFilesFromCompositorNode( mycd, frame_current, node : bpy.types.CompositorNodeOutputFile ):
+	files = [ ]
+	for value in node.file_slots.values():
+		f = helper_getFilename( value.path, frame_current, value.format.file_format )
+		p = helper_getPath( mycd, node.base_path )
+		files.append( os.path.join( p, f ) )			
+	return files
+
+@persistent
+def helper_getObjectJsonData( scene ):
+	jsonData = {
+	}
+	return jsonData
+@persistent
 def write_object_data( scene ):
 	# current camera: scene.camera
 	# current frame:  scene.frame_current
@@ -566,9 +615,15 @@ def write_object_data( scene ):
 	scene.writeObjDataTemp.hello_world = scene.writeObjDataTemp.hello_world + 1
 	scene.writeObjDataTemp.test = scene.writeObjDataTemp.test + 2
 	renderFileName = scene.render.frame_path(frame = frame_current)
-	print ("renderFileName = ", renderFileName)
+	( mycd, _ ) = os.path.splitdrive( renderFileName )
 
-	print("------")
+	# create a list of all render output files (includes
+	# the files created by compositor nodes)
+	fileOutputNodes = [ c for c in scene.node_tree.nodes if c.bl_idname == "CompositorNodeOutputFile" ]
+	fileList = [ renderFileName ]
+	for node in fileOutputNodes:
+		fileList += helper_getFilesFromCompositorNode( mycd, frame_current, node )
+
 	# print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
 	# print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 	# print("scene.render.filepath = ", scene.render.filepath)
@@ -577,27 +632,29 @@ def write_object_data( scene ):
 	# print("scene.render.filepath = ", scene.writeObjDataTab.opt_writeObData_Filename)
 	# x = "%s%05d.csv" % (scene.writeObjDataTab.opt_writeObData_Filename,frame_current,)
 	# print("scene.render.filepath = ", x)
-	fileOutputNodes = [ c for c in scene.node_tree.nodes if c.bl_idname == "CompositorNodeOutputFile" ] 
-	for node in fileOutputNodes:
-		for value in node.file_slots.values():
-			f = value.path
-			frameStr = '{:0>4}'.format( frame_current )
-			ext = value.format.file_format
-			f = bpy.path.ensure_ext( f + frameStr + ".", ext )
-			p = node.base_path
-			(dr,pa) = os.path.splitdrive(p)
-			if not dr:
-				( mycd, _ ) = os.path.splitdrive( renderFileName )
-				p = os.path.join( mycd, p )
-			p = os.path.realpath( p )
-			p = os.path.join( p, f )
-			print ( "  7: Another output file = ", p )
-			
-	print("------")
 
 	if scene.writeObjDataTab.opt_writeObjData_Format == "OFF":
 		# nothing to do
 		pass
+	elif scene.writeObjDataTab.opt_writeObjData_Format == "JSON":
+		print( "JSON object data output not implemented, yet" )
+		objectData = helper_getObjectJsonData( scene )
+		jsonData = {
+			"frame" : [
+				{
+					"frame_current" : frame_current,
+					"render_file" : renderFileName,
+					"files" : fileList,
+					"objects" : objectData
+				}
+			]
+		}
+		jstr = json.dumps( jsonData, indent = 4 )
+		print("------")
+		print( jstr )
+		targetFileName = helper_getPath( mycd, scene.writeObjDataTab.opt_writeObData_Filename )
+		print( "target file = \"", targetFileName, "\"" )
+		print("------")
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "CSV":
 		print( "CSV object data output not implemented, yet" )
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "VOC":
