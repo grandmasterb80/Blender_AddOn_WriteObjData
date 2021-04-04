@@ -209,9 +209,9 @@ class TestTest(PropertyGroup):
 # ------------------------------------------------------------------------
 
 class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
-	opt_writeObjData_Position : bpy.props.BoolProperty(
-		name="Position",
-		description="Write the position of an oobject.",
+	opt_writeObjData_Location : bpy.props.BoolProperty(
+		name="Location",
+		description="Write the location of an oobject.",
 		options = {'HIDDEN'},
 		default = True
 	)
@@ -442,7 +442,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		row.operator('custom_def_list.move_item', text='Mv Down').direction = 'DOWN'
 
 		h2.active = writeObjDataTab.opt_writeObjData_Format != "OFF"
-		h2.prop(writeObjDataOpt, "opt_writeObjData_Position")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Location")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
@@ -483,7 +483,7 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 
 		h2 = h1.column()
 		h2.active = not writeObjDataTab.opt_writeObjDataObject_UseGlobal
-		h2.prop(writeObjDataOpt, "opt_writeObjData_Position")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Location")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
