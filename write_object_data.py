@@ -479,7 +479,7 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 
 		h1 = layout.column()
 		h1.active = writeObjDataTab.opt_writeObjDataObject_Enabled
-		h1 .prop(writeObjDataTab, "opt_writeObjDataObject_UseGlobal")
+		h1.prop(writeObjDataTab, "opt_writeObjDataObject_UseGlobal")
 
 		h2 = h1.column()
 		h2.active = not writeObjDataTab.opt_writeObjDataObject_UseGlobal
