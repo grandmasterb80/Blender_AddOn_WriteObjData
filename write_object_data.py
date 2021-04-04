@@ -142,6 +142,7 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 	def update_opt_writeObjDataObject(self, context):
 		obj = context.object
+		if obj:
 		writeObjDataList = context.scene.writeObjDataList
 
 		if obj.writeObjDataTab.opt_writeObjDataObject_Enabled:
