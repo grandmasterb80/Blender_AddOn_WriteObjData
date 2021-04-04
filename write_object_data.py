@@ -143,21 +143,20 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 	def update_opt_writeObjDataObject(self, context):
 		obj = context.object
 		if obj:
-		writeObjDataList = context.scene.writeObjDataList
-
-		if obj.writeObjDataTab.opt_writeObjDataObject_Enabled:
-			if self not in [sub.objectPtr for sub in writeObjDataList]:
-				writeObjDataList.add()
-				iii = writeObjDataList[ -1 ]
-				iii.objectPtr = obj
-				iii.name = obj.name
-		else:
-			index = 0
-			for e in writeObjDataList:
-				if e.objectPtr == obj:
-					writeObjDataList.remove(index)
-					return
-				index = index + 1
+			writeObjDataList = context.scene.writeObjDataList
+			if obj.writeObjDataTab.opt_writeObjDataObject_Enabled:
+				if self not in [sub.objectPtr for sub in writeObjDataList]:
+					writeObjDataList.add()
+					iii = writeObjDataList[ -1 ]
+					iii.objectPtr = obj
+					iii.name = obj.name
+			else:
+				index = 0
+				for e in writeObjDataList:
+					if e.objectPtr == obj:
+						writeObjDataList.remove(index)
+						return
+					index = index + 1
 
 	def ObjWriteDataOptionsUpdateSettings(self, context):
 		obj = context.object
