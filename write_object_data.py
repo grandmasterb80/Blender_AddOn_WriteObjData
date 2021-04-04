@@ -34,7 +34,13 @@ bl_info = {
 	"category": "Object"
 }
 
+from glob import glob
+from pathlib import Path, PureWindowsPath
+import os.path
 import bpy
+import webbrowser
+import pprint
+import json
 
 from bpy.props import (StringProperty,
 						BoolProperty,
@@ -50,11 +56,10 @@ from bpy.types import (Panel,
 						AddonPreferences,
 						UIList,
 						PropertyGroup,
+						FileSelectParams,
 						)
 
 from bpy.app.handlers import persistent
-
-from pprint import pprint
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
@@ -595,7 +600,117 @@ def helper_getFilesFromCompositorNode( mycd, frame_current, node : bpy.types.Com
 def helper_getObjectJsonData( scene ):
 	jsonData = {
 	}
+	#bpy.types.Scene.writeObjDataList
+	#bpy.types.Scene.writeObjDataTab = PointerProperty(type=WriteObjDataOutputPropertySettings)
+	#bpy.types.Scene.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
+	objID = 0
+	for obj in scene.writeObjDataList:
+		objName = "object_" + '{:0>4}'.format( objID ) 
+		objID = objID + 1
+		jsonData[ objName ] = {
+			"name" : obj.objectPtr.name
+		}
+		useGlobal = obj.objectPtr.writeObjDataTab.opt_writeObjDataObject_UseGlobal
+		writeLocation = scene.writeObjDataOpt.opt_writeObjData_Location if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Location
+		writeRotation = scene.writeObjDataOpt.opt_writeObjData_Rotation if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Rotation
+		writeScale = scene.writeObjDataOpt.opt_writeObjData_Scale if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Scale
+		writeDimensions = scene.writeObjDataOpt.opt_writeObjData_Dimensions if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Dimensions
+		writeBones = scene.writeObjDataOpt.opt_writeObjData_Bones if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Bones
+		writeBones = writeBones and ( obj.objectPtr.type == "ARMATURE" )
+		writeAnimated = scene.writeObjDataOpt.opt_writeObjData_Animated if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Animated
+		writeBB3D = scene.writeObjDataOpt.opt_writeObjData_bb3d if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_bb3d
+		writeBB2D = scene.writeObjDataOpt.opt_writeObjData_bb2d if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_bb2d
+		#
+		#
+		#
+		# obj.calc_matrix_camera
+		#
+		# animation_data = None
+		# animation_data_clear = <bpy_func Object.animation_data_clear()>
+		# animation_data_create = <bpy_func Object.animation_data_create()>
+		# animation_visualization = bpy.data.objects['Armature']...AnimViz
+		# camera_fit_coords
+		# children
+		# make_local
+		# mode
+		# modifiers
+		# matrix_basis, matrix_local, matrix_parent_inverse, matrix_world
+		# pose
+		# pose_library
+		# rotation_axis_angle
+		# type
+		# up_axis
+		# convert_space
+		if writeLocation:
+			loc = obj.objectPtr.location
+			jsonData[ objName ][ "location" ] = {
+				"x" : loc[0],
+				"y" : loc[1],
+				"z" : loc[2]
+			}
+		if writeRotation:
+			rot_euler = obj.objectPtr.rotation_euler
+			rot_quaternion = obj.objectPtr.rotation_quaternion
+			jsonData[ objName ][ "rotation_mode" ] = obj.objectPtr.rotation_mode
+			jsonData[ objName ][ "rotation_euler" ] = {
+				"x" : rot_euler[0],
+				"y" : rot_euler[1],
+				"z" : rot_euler[2]
+			}
+			jsonData[ objName ][ "rotation_quaternion" ] = {
+				"x" : rot_quaternion[0],
+				"y" : rot_quaternion[1],
+				"z" : rot_quaternion[2]
+			}
+		if writeScale:
+			jsonData[ objName ][ "scale" ] = {
+				 "x" : obj.objectPtr.scale[0],
+				 "y" : obj.objectPtr.scale[1],
+				 "z" : obj.objectPtr.scale[2]
+			}
+		if writeDimensions:
+			jsonData[ objName ][ "dimensions" ] = {
+				 "x" : obj.objectPtr.dimensions[0],
+				 "y" : obj.objectPtr.dimensions[1],
+				 "z" : obj.objectPtr.dimensions[2]
+			}
+		if writeBones:
+			print( "I will write the bones for ", obj.objectPtr.name )
+			dump_obj( bpy.data.armatures[ obj.objectPtr.name ].bones.values() )
+			for v in bpy.data.armatures[ obj.objectPtr.name ].bones.values():
+				print( "Dumping bone data ", v.name )
+				dump_obj(v)
+		if writeAnimated:
+			print( "I will write the animated parameters for ", obj.objectPtr.name )
+		if writeBB3D:
+			bb3d = obj.objectPtr.bound_box
+			jsonData[ objName ][ "bb3d" ] = {
+			}
+			pIndex = 0
+			for p in bb3d:
+				pointName = "p" + '{:0>1}'.format( pIndex )
+				pIndex = pIndex + 1
+				jsonData[ objName ][ "bb3d" ][ pointName ] = {
+					"x" : p[0],
+					"y" : p[1],
+					"z" : p[2]
+				}
+		if writeBB2D:
+			print( "I will write the writeBB2D for ", obj.objectPtr.name )
+			#jsonData[ objName ][ "bb2d" ] = obj.objectPtr.dimensions
+
+	# for obj in bpy.data.objects:
+		# print( "(C) Name:", obj.objectPtr.name )
+		# print( "(C) Bound Box:", obj.objectPtr.bound_box )
+		# print( "(C) Dimensions:", obj.objectPtr.dimensions )
+		# print( "(C) Locataion:", obj.objectPtr.location )
+		# print( "(C) Rotation Euler:", obj.objectPtr.rotation_euler )
+		# print( "(C) Rotation Mode:", obj.objectPtr.rotation_mode )
+		# print( "(C) Rotation Quaternion:", obj.objectPtr.rotation_quaternion )
+		# print( "(C) Scale:", obj.objectPtr.scale )
+		# print( "(C) ------------" )
 	return jsonData
+
 @persistent
 def write_object_data( scene ):
 	# current camera: scene.camera
@@ -664,6 +779,7 @@ def write_object_data( scene ):
 		
 	else:
 		print( "Unknown object data output %. Please contact developer.", scene.writeObjDataTab.opt_writeObjData_Format )
+
 
 	#print("bpy.types.CompositorNodeOutputFile = ", bpy.types.CompositorNodeOutputFile().base_path)
 	#dump_obj(scene.render)
