@@ -230,6 +230,13 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 		default = False
 	)
 
+	opt_writeObjData_Dimensions : bpy.props.BoolProperty(
+		name="Dimensions",
+		description="Write the dimensions of an object.",
+		options = {'HIDDEN'},
+		default = False
+	)
+
 	opt_writeObjData_Bones : bpy.props.BoolProperty(
 		name="Bones",
 		description="Write the bone data of an object.",
@@ -445,6 +452,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Location")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Dimensions")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
@@ -486,6 +494,7 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Location")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Dimensions")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
