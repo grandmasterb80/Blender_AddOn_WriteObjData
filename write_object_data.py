@@ -160,7 +160,6 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 
 	def ObjWriteDataOptionsUpdateSettings(self, context):
 		obj = context.object
-		obj.h.active = obj.writeObjDataTab.opt_writeObjDataObject_UseGlobal
 		if self.opt_writeObjDataObject_UseGlobal:
 			print("Option enabled")
 		else:
