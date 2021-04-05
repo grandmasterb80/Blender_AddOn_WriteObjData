@@ -658,8 +658,6 @@ def helper_mkJsonFrumPyObj( obj ):
 def helper_mkDictFromBones( bones ):
 	jsonData = {
 	}
-	#jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( bpy.data.armatures[ obj.objectPtr.name ].bones )
-	#dump_obj( bones.values() )
 	boneID = 0
 	for v in bones.values():
 		boneName = "bone_" + '{:0>4}'.format( boneID ) 
