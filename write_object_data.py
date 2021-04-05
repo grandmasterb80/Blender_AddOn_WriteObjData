@@ -65,17 +65,6 @@ from bpy.app.handlers import persistent
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
-def dump_obj(obj):
-	for attr in dir(obj):
-		try:
-			if ( attr[ :2 ] != "__" and attr[ -2: ] != "__" ) or hasattr(attr, '__call__'):
-				print("obj.%s = %r" % (attr, getattr(obj, attr)))
-			else:
-				print("(skipping) obj.%s = %r" % (attr, getattr(obj, attr)))
-		except AttributeError:
-			print("obj.%s not available" % attr)
-
-# ------------------------------------------------------------------------
 def isJsonable(v):
 	if isinstance( v, mathutils.Vector ):
 		return True
@@ -87,6 +76,17 @@ def isJsonable(v):
 			return True
 		except:
 			return False
+
+# ------------------------------------------------------------------------
+def dump_obj(obj):
+	for attr in dir(obj):
+		try:
+			if ( attr[ :2 ] != "__" and attr[ -2: ] != "__" ) and ( not hasattr(attr, '__call__') ) and isJsonable( getattr(obj, attr) ):
+				print("obj.%s = %r" % (attr, getattr(obj, attr)))
+			else:
+				print("(skipping) obj.%s = %r" % (attr, getattr(obj, attr)))
+		except AttributeError:
+			print("obj.%s not available" % attr)
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
