@@ -708,17 +708,14 @@ def helper_mkJsonFromObjects( scene ):
 		if writeLocation:
 			jsonData[ objName ][ "location" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.location )
 		if writeRotation:
-			rot_euler = obj.objectPtr.rotation_euler
-			rot_quaternion = obj.objectPtr.rotation_quaternion
 			jsonData[ objName ][ "rotation_mode" ] = obj.objectPtr.rotation_mode
-			jsonData[ objName ][ "rotation_euler" ] = helper_mkJsonVectorFromVector3( rot_euler )
-			jsonData[ objName ][ "rotation_quaternion" ] = helper_mkJsonVectorFromVector3( rot_quaternion )
+			jsonData[ objName ][ "rotation_euler" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.rotation_euler )
+			jsonData[ objName ][ "rotation_quaternion" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.rotation_quaternion )
 		if writeScale:
 			jsonData[ objName ][ "scale" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.scale )
 		if writeDimensions:
 			jsonData[ objName ][ "dimensions" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.dimensions )
 		if writeBones:
-			print( "I will write the bones for ", obj.objectPtr.name )
 			jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( bpy.data.armatures[ obj.objectPtr.name ].bones )
 		if writeAnimated:
 			print( "I will write the animated parameters for ", obj.objectPtr.name )
