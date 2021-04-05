@@ -72,6 +72,8 @@ def isJsonable(v):
 		return True
 	elif isinstance( v, bpy.types.bpy_prop_collection ):
 		return True
+	elif isinstance( v, bpy.types.CameraDOFSettings ):
+		return True
 	else:
 		try:
 			json.dumps(v)
@@ -261,9 +263,16 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 		default = False
 	)
 
-	opt_writeObjData_Bones : bpy.props.BoolProperty(
-		name="Bones",
-		description="Write the bone data of an object.",
+	opt_writeObjData_bb3d : bpy.props.BoolProperty(
+		name="3D Bounding Box",
+		description="Write 3D bounding box data of an object.",
+		options = {'HIDDEN'},
+		default = False
+	)
+
+	opt_writeObjData_bb2d : bpy.props.BoolProperty(
+		name="2D Bounding Box",
+		description="Write 2D bounding box data of an object (always in image coordinates).",
 		options = {'HIDDEN'},
 		default = False
 	)
@@ -275,16 +284,16 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 		default = False
 	)
 
-	opt_writeObjData_bb3d : bpy.props.BoolProperty(
-		name="3D Bounding Box",
-		description="Write 3D bounding box data of an object.",
+	opt_writeObjData_Camera : bpy.props.BoolProperty(
+		name="Camera",
+		description="Write camera specific data of a camera, i.e., focal length, aperture, type.",
 		options = {'HIDDEN'},
-		default = False
+		default = True
 	)
 
-	opt_writeObjData_bb2d : bpy.props.BoolProperty(
-		name="2D Bounding Box",
-		description="Write 2D bounding box data of an object (always in image coordinates).",
+	opt_writeObjData_Bones : bpy.props.BoolProperty(
+		name="Bones",
+		description="Write the bone data of an object.",
 		options = {'HIDDEN'},
 		default = False
 	)
@@ -477,10 +486,11 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Dimensions")
-		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
-		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2d")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Camera")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 
 
 # ------------------------------------------------------------------------
@@ -519,10 +529,18 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Rotation")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Scale")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Dimensions")
-		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
-		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2d")
+
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
+
+		h3 = h2.column()
+		h3.active = obj.type == 'CAMERA'
+		h3.prop(writeObjDataOpt, "opt_writeObjData_Camera")
+
+		h4 = h2.column()
+		h4.active = obj.type == 'ARMATURE'
+		h4.prop(writeObjDataOpt, "opt_writeObjData_Bones")
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
@@ -629,6 +647,29 @@ def helper_mkJsonArrayFromMatrix( matrix ):
 	return rowList
 
 @persistent
+def helper_mkJsonDOFSetting( dofS ):
+	jsonData = {
+		"aperture_blades": dofS.aperture_blades,
+		"aperture_fstop": dofS.aperture_fstop,
+		"aperture_ratio": dofS.aperture_ratio,
+		"aperture_rotation": dofS.aperture_rotation,
+		"focus_distance": dofS.focus_distance,
+		"use_dof": dofS.use_dof
+	}
+	return jsonData
+
+@persistent
+def helper_mkJsonBB3( bb3d ):
+	jsonData = {
+	}
+	pIndex = 0
+	for p in bb3d:
+		pointName = "p" + '{:0>1}'.format( pIndex )
+		pIndex = pIndex + 1
+		jsonData[ pointName ] = helper_mkJsonVectorFromVector3(p)
+	return jsonData
+
+@persistent
 def helper_toJosn( v ):
 	if isinstance( v, mathutils.Vector ):
 		return helper_mkJsonVectorFromVector3( v )
@@ -639,6 +680,8 @@ def helper_toJosn( v ):
 		for i in range( len( v ) ):
 			nameList.append( getattr( v[i], "name" ) )
 		return nameList
+	elif isinstance( v, bpy.types.CameraDOFSettings ):
+		return helper_mkJsonDOFSetting( v )
 	else:
 		return v
 
@@ -666,6 +709,11 @@ def helper_mkDictFromBones( bones ):
 	return jsonData
 
 @persistent
+def helper_mkDictFromCamera( camera ):
+	dump_obj( camera )
+	return helper_mkJsonFrumPyObj( camera )
+
+@persistent
 def helper_mkJsonFromObjects( scene ):
 	jsonData = {
 	}
@@ -677,18 +725,21 @@ def helper_mkJsonFromObjects( scene ):
 		objName = "object_" + '{:0>4}'.format( objID ) 
 		objID = objID + 1
 		jsonData[ objName ] = {
-			"name" : obj.objectPtr.name
+			"name" : obj.objectPtr.name,
+			"type" : obj.objectPtr.type
 		}
 		useGlobal = obj.objectPtr.writeObjDataTab.opt_writeObjDataObject_UseGlobal
 		writeLocation = scene.writeObjDataOpt.opt_writeObjData_Location if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Location
 		writeRotation = scene.writeObjDataOpt.opt_writeObjData_Rotation if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Rotation
 		writeScale = scene.writeObjDataOpt.opt_writeObjData_Scale if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Scale
 		writeDimensions = scene.writeObjDataOpt.opt_writeObjData_Dimensions if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Dimensions
-		writeBones = scene.writeObjDataOpt.opt_writeObjData_Bones if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Bones
-		writeBones = writeBones and ( obj.objectPtr.type == "ARMATURE" )
-		writeAnimated = scene.writeObjDataOpt.opt_writeObjData_Animated if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Animated
 		writeBB3D = scene.writeObjDataOpt.opt_writeObjData_bb3d if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_bb3d
 		writeBB2D = scene.writeObjDataOpt.opt_writeObjData_bb2d if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_bb2d
+		writeAnimated = scene.writeObjDataOpt.opt_writeObjData_Animated if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Animated
+		writeBones = scene.writeObjDataOpt.opt_writeObjData_Bones if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Bones
+		writeBones = writeBones and ( obj.objectPtr.type == "ARMATURE" )
+		writeCamera = scene.writeObjDataOpt.opt_writeObjData_Camera if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Camera
+		writeCamera = writeCamera and ( obj.objectPtr.type == "CAMERA" )
 		#
 		#
 		#
@@ -720,22 +771,17 @@ def helper_mkJsonFromObjects( scene ):
 			jsonData[ objName ][ "scale" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.scale )
 		if writeDimensions:
 			jsonData[ objName ][ "dimensions" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.dimensions )
-		if writeBones:
-			jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( bpy.data.armatures[ obj.objectPtr.name ].bones )
 		if writeAnimated:
 			print( "I will write the animated parameters for ", obj.objectPtr.name )
 		if writeBB3D:
-			bb3d = obj.objectPtr.bound_box
-			jsonData[ objName ][ "bb3d" ] = {
-			}
-			pIndex = 0
-			for p in bb3d:
-				pointName = "p" + '{:0>1}'.format( pIndex )
-				pIndex = pIndex + 1
-				jsonData[ objName ][ "bb3d" ][ pointName ] = helper_mkJsonVectorFromVector3(p)
+			jsonData[ objName ][ "bb3d" ] = helper_mkJsonBB3( obj.objectPtr.bound_box )
 		if writeBB2D:
 			print( "I will write the writeBB2D for ", obj.objectPtr.name )
-			#jsonData[ objName ][ "bb2d" ] = obj.objectPtr.dimensions
+			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB3( obj.objectPtr.bound_box )
+		if writeBones:
+			jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( bpy.data.armatures[ obj.objectPtr.name ].bones )
+		if writeCamera:
+			jsonData[ objName ][ "cameras" ] = helper_mkDictFromCamera( bpy.data.cameras[ obj.objectPtr.name ] )
 
 	# for obj in bpy.data.objects:
 		# print( "(C) Name:", obj.objectPtr.name )
