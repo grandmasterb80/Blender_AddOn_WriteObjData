@@ -67,7 +67,10 @@ from bpy.app.handlers import persistent
 def dump_obj(obj):
 	for attr in dir(obj):
 		try:
-			print("obj.%s = %r" % (attr, getattr(obj, attr)))
+			if ( attr[ :2 ] != "__" and attr[ -2: ] != "__" ) or hasattr(attr, '__call__'):
+				print("obj.%s = %r" % (attr, getattr(obj, attr)))
+			else:
+				print("(skipping) obj.%s = %r" % (attr, getattr(obj, attr)))
 		except AttributeError:
 			print("obj.%s not available" % attr)
 
