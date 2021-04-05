@@ -629,13 +629,10 @@ def helper_mkJsonArrayFromMatrix( matrix ):
 @persistent
 def helper_toJosn( v ):
 	if isinstance( v, mathutils.Vector ):
-		print( "helper_toJson: vector" )
 		return helper_mkJsonVectorFromVector3( v )
 	elif isinstance( v, mathutils.Matrix ):
-		print( "helper_toJson: matrix" )
 		return helper_mkJsonArrayFromMatrix( v )
 	else:
-		print( "helper_toJson: v" )
 		return v
 
 @persistent
@@ -645,10 +642,7 @@ def helper_mkJsonFrumPyObj( obj ):
 	for attr in dir(obj):
 		try:
 			if ( attr[ :2 ] != "__" and attr[ -2: ] != "__" ) and ( not hasattr(attr, '__call__') ) and isJsonable( getattr(obj, attr) ):
-				print( "obj.%s = %r" % ( attr, getattr( obj, attr ) ) )
 				jsonData[ attr ] = helper_toJosn( getattr( obj, attr ) )
-			else:
-				print( "(skipping) obj.%s = %r" % ( attr, getattr( obj, attr ) ) )
 		except AttributeError:
 			print( "obj.%s not available" % attr )
 	return jsonData
@@ -664,8 +658,6 @@ def helper_mkDictFromBones( bones ):
 		boneName = "bone_" + '{:0>4}'.format( boneID ) 
 		boneID = boneID + 1
 		jsonData[ boneName ] = helper_mkJsonFrumPyObj( v )
-		print( "Dumping bone data ", v.name )
-		#dump_obj(v)
 	return jsonData
 
 @persistent
