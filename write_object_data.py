@@ -70,6 +70,8 @@ def isJsonable(v):
 		return True
 	elif isinstance( v, mathutils.Matrix ):
 		return True
+	elif isinstance( v, bpy.types.bpy_prop_collection ):
+		return True
 	else:
 		try:
 			json.dumps(v)
@@ -632,6 +634,11 @@ def helper_toJosn( v ):
 		return helper_mkJsonVectorFromVector3( v )
 	elif isinstance( v, mathutils.Matrix ):
 		return helper_mkJsonArrayFromMatrix( v )
+	elif isinstance( v, bpy.types.bpy_prop_collection ):
+		nameList = []
+		for i in range( len( v ) ):
+			nameList.append( getattr( v[i], "name" ) )
+		return nameList
 	else:
 		return v
 
