@@ -600,7 +600,27 @@ def helper_getFilesFromCompositorNode( mycd, frame_current, node : bpy.types.Com
 	return files
 
 @persistent
-def helper_getObjectJsonData( scene ):
+def helper_mkJsonVectorFromVector3( vec3 ):
+	return {
+		"x" : vec3[0],
+		"y" : vec3[1],
+		"z" : vec3[2]
+	}
+
+@persistent
+def helper_mkJsonFrumPyObj( obj ):
+	jsonData = {
+	}
+	return jsonData
+
+@persistent
+def helper_mkDictFromBones( bones ):
+	jsonData = {
+	}
+	return jsonData
+
+@persistent
+def helper_mkJsonFromObjects( scene ):
 	jsonData = {
 	}
 	#bpy.types.Scene.writeObjDataList
@@ -645,44 +665,20 @@ def helper_getObjectJsonData( scene ):
 		# up_axis
 		# convert_space
 		if writeLocation:
-			loc = obj.objectPtr.location
-			jsonData[ objName ][ "location" ] = {
-				"x" : loc[0],
-				"y" : loc[1],
-				"z" : loc[2]
-			}
+			jsonData[ objName ][ "location" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.location )
 		if writeRotation:
 			rot_euler = obj.objectPtr.rotation_euler
 			rot_quaternion = obj.objectPtr.rotation_quaternion
 			jsonData[ objName ][ "rotation_mode" ] = obj.objectPtr.rotation_mode
-			jsonData[ objName ][ "rotation_euler" ] = {
-				"x" : rot_euler[0],
-				"y" : rot_euler[1],
-				"z" : rot_euler[2]
-			}
-			jsonData[ objName ][ "rotation_quaternion" ] = {
-				"x" : rot_quaternion[0],
-				"y" : rot_quaternion[1],
-				"z" : rot_quaternion[2]
-			}
+			jsonData[ objName ][ "rotation_euler" ] = helper_mkJsonVectorFromVector3( rot_euler )
+			jsonData[ objName ][ "rotation_quaternion" ] = helper_mkJsonVectorFromVector3( rot_quaternion )
 		if writeScale:
-			jsonData[ objName ][ "scale" ] = {
-				 "x" : obj.objectPtr.scale[0],
-				 "y" : obj.objectPtr.scale[1],
-				 "z" : obj.objectPtr.scale[2]
-			}
+			jsonData[ objName ][ "scale" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.scale )
 		if writeDimensions:
-			jsonData[ objName ][ "dimensions" ] = {
-				 "x" : obj.objectPtr.dimensions[0],
-				 "y" : obj.objectPtr.dimensions[1],
-				 "z" : obj.objectPtr.dimensions[2]
-			}
+			jsonData[ objName ][ "dimensions" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.dimensions )
 		if writeBones:
 			print( "I will write the bones for ", obj.objectPtr.name )
-			dump_obj( bpy.data.armatures[ obj.objectPtr.name ].bones.values() )
-			for v in bpy.data.armatures[ obj.objectPtr.name ].bones.values():
-				print( "Dumping bone data ", v.name )
-				dump_obj(v)
+			jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( bpy.data.armatures[ obj.objectPtr.name ].bones )
 		if writeAnimated:
 			print( "I will write the animated parameters for ", obj.objectPtr.name )
 		if writeBB3D:
@@ -693,11 +689,7 @@ def helper_getObjectJsonData( scene ):
 			for p in bb3d:
 				pointName = "p" + '{:0>1}'.format( pIndex )
 				pIndex = pIndex + 1
-				jsonData[ objName ][ "bb3d" ][ pointName ] = {
-					"x" : p[0],
-					"y" : p[1],
-					"z" : p[2]
-				}
+				jsonData[ objName ][ "bb3d" ][ pointName ] = helper_mkJsonVectorFromVector3(p)
 		if writeBB2D:
 			print( "I will write the writeBB2D for ", obj.objectPtr.name )
 			#jsonData[ objName ][ "bb2d" ] = obj.objectPtr.dimensions
@@ -756,7 +748,7 @@ def write_object_data( scene ):
 		pass
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "JSON":
 		print( "JSON object data output not implemented, yet" )
-		objectData = helper_getObjectJsonData( scene )
+		objectData = helper_mkJsonFromObjects( scene )
 		jsonData = {
 			"frame" : [
 				{
