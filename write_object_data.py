@@ -41,6 +41,7 @@ import bpy
 import webbrowser
 import pprint
 import json
+import mathutils
 
 from bpy.props import (StringProperty,
 						BoolProperty,
@@ -73,6 +74,19 @@ def dump_obj(obj):
 				print("(skipping) obj.%s = %r" % (attr, getattr(obj, attr)))
 		except AttributeError:
 			print("obj.%s not available" % attr)
+
+# ------------------------------------------------------------------------
+def isJsonable(v):
+	if isinstance( v, mathutils.Vector ):
+		return True
+	elif isinstance( v, mathutils.Matrix ):
+		return True
+	else:
+		try:
+			json.dumps(v)
+			return True
+		except:
+			return False
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
@@ -608,15 +622,50 @@ def helper_mkJsonVectorFromVector3( vec3 ):
 	}
 
 @persistent
+def helper_mkJsonArrayFromMatrix( matrix ):
+	rowList = [list(row) for row in matrix]
+	return rowList
+
+@persistent
+def helper_toJosn( v ):
+	if isinstance( v, mathutils.Vector ):
+		print( "helper_toJson: vector" )
+		return helper_mkJsonVectorFromVector3( v )
+	elif isinstance( v, mathutils.Matrix ):
+		print( "helper_toJson: matrix" )
+		return helper_mkJsonArrayFromMatrix( v )
+	else:
+		print( "helper_toJson: v" )
+		return v
+
+@persistent
 def helper_mkJsonFrumPyObj( obj ):
 	jsonData = {
 	}
+	for attr in dir(obj):
+		try:
+			if ( attr[ :2 ] != "__" and attr[ -2: ] != "__" ) and ( not hasattr(attr, '__call__') ) and isJsonable( getattr(obj, attr) ):
+				print( "obj.%s = %r" % ( attr, getattr( obj, attr ) ) )
+				jsonData[ attr ] = helper_toJosn( getattr( obj, attr ) )
+			else:
+				print( "(skipping) obj.%s = %r" % ( attr, getattr( obj, attr ) ) )
+		except AttributeError:
+			print( "obj.%s not available" % attr )
 	return jsonData
 
 @persistent
 def helper_mkDictFromBones( bones ):
 	jsonData = {
 	}
+	#jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( bpy.data.armatures[ obj.objectPtr.name ].bones )
+	#dump_obj( bones.values() )
+	boneID = 0
+	for v in bones.values():
+		boneName = "bone_" + '{:0>4}'.format( boneID ) 
+		boneID = boneID + 1
+		jsonData[ boneName ] = helper_mkJsonFrumPyObj( v )
+		print( "Dumping bone data ", v.name )
+		#dump_obj(v)
 	return jsonData
 
 @persistent
