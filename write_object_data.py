@@ -617,9 +617,12 @@ def helper_getFilename( basename, frameCounter, fileFormat ):
 	return bpy.path.ensure_ext( basename + frameStr + ".", ext )
 
 @persistent
-def helper_getPath( renderPathDrive, path ):
-	( dr, pa ) = os.path.splitdrive( path )
-	p = Path( path )
+def helper_getPath( renderPathDrive, renderPath, path ):
+	rp = os.path.dirname( renderPath )
+	p = path
+	if not os.path.dirname( p ):
+		p = os.path.join( rp, p )
+	( dr, pa ) = os.path.splitdrive( p )
 	if not dr:
 		p = os.path.join( renderPathDrive, p )
 	return os.path.realpath( p )
@@ -629,8 +632,8 @@ def helper_getFilesFromCompositorNode( mycd, frame_current, node : bpy.types.Com
 	files = [ ]
 	for value in node.file_slots.values():
 		f = helper_getFilename( value.path, frame_current, value.format.file_format )
-		p = helper_getPath( mycd, node.base_path )
-		files.append( os.path.join( p, f ) )			
+		p = helper_getPath( mycd, node.base_path, f )
+		files.append( p )
 	return files
 
 @persistent
@@ -689,6 +692,7 @@ def helper_toJosn( v ):
 def helper_mkJsonFrumPyObj( obj ):
 	jsonData = {
 	}
+	#print(" ***************** helper_mkJsonFrumPyObj( obj ) = ", obj)
 	for attr in dir(obj):
 		try:
 			if ( attr[ :2 ] != "__" and attr[ -2: ] != "__" ) and ( not hasattr(attr, '__call__') ) and isJsonable( getattr(obj, attr) ):
@@ -710,7 +714,7 @@ def helper_mkDictFromBones( bones ):
 
 @persistent
 def helper_mkDictFromCamera( camera ):
-	dump_obj( camera )
+	#dump_obj( camera )
 	return helper_mkJsonFrumPyObj( camera )
 
 @persistent
@@ -750,7 +754,6 @@ def helper_mkJsonFromObjects( scene ):
 		# animation_data_create = <bpy_func Object.animation_data_create()>
 		# animation_visualization = bpy.data.objects['Armature']...AnimViz
 		# camera_fit_coords
-		# children
 		# make_local
 		# mode
 		# modifiers
@@ -814,7 +817,7 @@ def write_object_data( scene ):
 	scene.writeObjDataTemp.hello_world = scene.writeObjDataTemp.hello_world + 1
 	scene.writeObjDataTemp.test = scene.writeObjDataTemp.test + 2
 	renderFileName = scene.render.frame_path(frame = frame_current)
-	( mycd, _ ) = os.path.splitdrive( renderFileName )
+	( mycd, renderFilePath ) = os.path.splitdrive( renderFileName )
 
 	# create a list of all render output files (includes
 	# the files created by compositor nodes)
@@ -836,7 +839,6 @@ def write_object_data( scene ):
 		# nothing to do
 		pass
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "JSON":
-		print( "JSON object data output not implemented, yet" )
 		objectData = helper_mkJsonFromObjects( scene )
 		jsonData = {
 			"frame" : [
@@ -849,11 +851,11 @@ def write_object_data( scene ):
 			]
 		}
 		jstr = json.dumps( jsonData, indent = 4 )
-		print("------")
-		print( jstr )
-		targetFileName = helper_getPath( mycd, scene.writeObjDataTab.opt_writeObData_Filename )
-		print( "target file = \"", targetFileName, "\"" )
-		print("------")
+		targetFileName = helper_getFilename( scene.writeObjDataTab.opt_writeObData_Filename, frame_current, "JSON" )
+		targetFile = helper_getPath( mycd, renderFilePath, targetFileName )
+		print( "Writing object data in JSON to \"", targetFile, "\"" )
+		with open( targetFile, 'w') as outfile:
+			json.dump( jsonData, outfile )
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "CSV":
 		print( "CSV object data output not implemented, yet" )
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "VOC":
