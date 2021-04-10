@@ -59,6 +59,8 @@ from bpy.types import (Panel,
 						PropertyGroup,
 						FileSelectParams,
 						)
+from bpy_extras import (object_utils
+						)
 
 from bpy.app.handlers import persistent
 
@@ -673,6 +675,20 @@ def helper_mkJsonBB3( bb3d ):
 	return jsonData
 
 @persistent
+def helper_mkJsonBB2( scene, cam, bb3d ):
+	bb3d_list = [ mathutils.Vector( p ) for p in bb3d ]
+	coords_2d = [ object_utils.world_to_camera_view( scene, cam, p ) for p in bb3d_list ]
+	xx = [ p.x for p in coords_2d ]
+	yy = [ p.y for p in coords_2d ]
+	jsonData = {
+		"x1" : min( xx ),
+		"y1" : min( yy ),
+		"x2" : max( xx ),
+		"y2" : max( yy )
+	}
+	return jsonData
+
+@persistent
 def helper_toJosn( v ):
 	if isinstance( v, mathutils.Vector ):
 		return helper_mkJsonVectorFromVector3( v )
@@ -764,6 +780,9 @@ def helper_mkJsonFromObjects( scene ):
 		# type
 		# up_axis
 		# convert_space
+		cams = bpy.data.cameras
+		active_cam = bpy.context.scene.camera
+
 		if writeLocation:
 			jsonData[ objName ][ "location" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.location )
 		if writeRotation:
@@ -779,12 +798,11 @@ def helper_mkJsonFromObjects( scene ):
 		if writeBB3D:
 			jsonData[ objName ][ "bb3d" ] = helper_mkJsonBB3( obj.objectPtr.bound_box )
 		if writeBB2D:
-			print( "I will write the writeBB2D for ", obj.objectPtr.name )
-			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB3( obj.objectPtr.bound_box )
+			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB2( scene, active_cam, obj.objectPtr.bound_box )
 		if writeBones:
 			jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( bpy.data.armatures[ obj.objectPtr.name ].bones )
 		if writeCamera:
-			jsonData[ objName ][ "cameras" ] = helper_mkDictFromCamera( bpy.data.cameras[ obj.objectPtr.name ] )
+			jsonData[ objName ][ "cameras" ] = helper_mkDictFromCamera( cams[ obj.objectPtr.name ] )
 
 	# for obj in bpy.data.objects:
 		# print( "(C) Name:", obj.objectPtr.name )
