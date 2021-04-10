@@ -868,12 +868,11 @@ def write_object_data( scene ):
 				}
 			]
 		}
-		jstr = json.dumps( jsonData, indent = 4 )
 		targetFileName = helper_getFilename( scene.writeObjDataTab.opt_writeObData_Filename, frame_current, "JSON" )
 		targetFile = helper_getPath( mycd, renderFilePath, targetFileName )
 		print( "Writing object data in JSON to \"", targetFile, "\"" )
 		with open( targetFile, 'w') as outfile:
-			json.dump( jsonData, outfile )
+			json.dump( jsonData, outfile, indent = 4 )
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "CSV":
 		print( "CSV object data output not implemented, yet" )
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "VOC":
