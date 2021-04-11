@@ -804,16 +804,6 @@ def helper_mkJsonFromObjects( scene ):
 		if writeCamera:
 			jsonData[ objName ][ "cameras" ] = helper_mkDictFromCamera( cams[ obj.objectPtr.name ] )
 
-	# for obj in bpy.data.objects:
-		# print( "(C) Name:", obj.objectPtr.name )
-		# print( "(C) Bound Box:", obj.objectPtr.bound_box )
-		# print( "(C) Dimensions:", obj.objectPtr.dimensions )
-		# print( "(C) Locataion:", obj.objectPtr.location )
-		# print( "(C) Rotation Euler:", obj.objectPtr.rotation_euler )
-		# print( "(C) Rotation Mode:", obj.objectPtr.rotation_mode )
-		# print( "(C) Rotation Quaternion:", obj.objectPtr.rotation_quaternion )
-		# print( "(C) Scale:", obj.objectPtr.scale )
-		# print( "(C) ------------" )
 	return jsonData
 
 @persistent
@@ -844,15 +834,6 @@ def write_object_data( scene ):
 	for node in fileOutputNodes:
 		fileList += helper_getFilesFromCompositorNode( mycd, frame_current, node )
 
-	# print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
-	# print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
-	# print("scene.render.filepath = ", scene.render.filepath)
-	# print("scene.render.filepath = ", scene.render.path_from_id())
-	# print("scene.render.filepath = ", scene.render.frame_path(frame = frame_current))
-	# print("scene.render.filepath = ", scene.writeObjDataTab.opt_writeObData_Filename)
-	# x = "%s%05d.csv" % (scene.writeObjDataTab.opt_writeObData_Filename,frame_current,)
-	# print("scene.render.filepath = ", x)
-
 	if scene.writeObjDataTab.opt_writeObjData_Format == "OFF":
 		# nothing to do
 		pass
@@ -879,32 +860,8 @@ def write_object_data( scene ):
 		print( "VOC object data output not implemented, yet" )
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "COCO":
 		print( "COCO object data output not implemented, yet" )
-		
 	else:
 		print( "Unknown object data output %. Please contact developer.", scene.writeObjDataTab.opt_writeObjData_Format )
-
-
-	#print("bpy.types.CompositorNodeOutputFile = ", bpy.types.CompositorNodeOutputFile().base_path)
-	#dump_obj(scene.render)
-	#pprint( vars( scene ) )
-	#for l in dir(scene):
-
-	# if ( scene.writeObjDataTab.opt_writeObjData_Format != "OFF" ):
-		# print("Log: Writing object data")
-		# print("(C) Frame Change", scene.frame_current)
-		# print("(C) Load Handler:", bpy.data.filepath)
-		# for obj in bpy.data.objects:
-			# print( "(C) Name:", obj.name )
-			# print( "(C) Bound Box:", obj.bound_box )
-			# print( "(C) Dimensions:", obj.dimensions )
-			# print( "(C) Locataion:", obj.location )
-			# print( "(C) Rotation Euler:", obj.rotation_euler )
-			# print( "(C) Rotation Mode:", obj.rotation_mode )
-			# print( "(C) Rotation Quaternion:", obj.rotation_quaternion )
-			# print( "(C) Scale:", obj.scale )
-			# print( "(C) ------------" )
-		# else:
-			# print("Log: Writing object data disabled.")
 
 @persistent
 def write_object_data_end( scene ):
