@@ -729,6 +729,16 @@ def helper_mkDictFromBones( bones ):
 	return jsonData
 
 @persistent
+def helper_mkDictFromPose( pose ):
+	jsonData = {
+		"use_auto_ik" : pose.use_auto_ik,
+		"use_mirror_relative" : pose.use_mirror_relative,
+		"use_mirror_x" : pose.use_mirror_x,
+		"bones" : helper_mkDictFromBones( pose.bones )
+	}
+	return jsonData
+
+@persistent
 def helper_mkDictFromCamera( camera ):
 	#dump_obj( camera )
 	return helper_mkJsonFrumPyObj( camera )
@@ -800,7 +810,8 @@ def helper_mkJsonFromObjects( scene ):
 		if writeBB2D:
 			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB2( scene, active_cam, obj.objectPtr.bound_box )
 		if writeBones:
-			jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( bpy.data.armatures[ obj.objectPtr.name ].bones )
+			jj = helper_mkDictFromPose( obj.objectPtr.pose )
+			jsonData[ objName ][ "pose" ] = jj
 		if writeCamera:
 			jsonData[ objName ][ "cameras" ] = helper_mkDictFromCamera( cams[ obj.objectPtr.name ] )
 
