@@ -694,13 +694,13 @@ def helper_toJosn( v ):
 		return helper_mkJsonVectorFromVector3( v )
 	elif isinstance( v, mathutils.Matrix ):
 		return helper_mkJsonArrayFromMatrix( v )
+	elif isinstance( v, bpy.types.CameraDOFSettings ):
+		return helper_mkJsonDOFSetting( v )
 	elif isinstance( v, bpy.types.bpy_prop_collection ):
 		nameList = []
 		for i in range( len( v ) ):
 			nameList.append( getattr( v[i], "name" ) )
 		return nameList
-	elif isinstance( v, bpy.types.CameraDOFSettings ):
-		return helper_mkJsonDOFSetting( v )
 	else:
 		return v
 
