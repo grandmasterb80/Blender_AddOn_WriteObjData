@@ -664,9 +664,10 @@ def helper_mkJsonDOFSetting( dofS ):
 	return jsonData
 
 @persistent
-def helper_mkJsonBB3( bb3d ):
+def helper_mkJsonBB3( obj ):
 	jsonData = {
 	}
+	bb3d = obj.objectPtr.bound_box
 	pIndex = 0
 	for p in bb3d:
 		pointName = "p" + '{:0>1}'.format( pIndex )
@@ -675,7 +676,8 @@ def helper_mkJsonBB3( bb3d ):
 	return jsonData
 
 @persistent
-def helper_mkJsonBB2( scene, cam, bb3d ):
+def helper_mkJsonBB2( scene, cam, obj ):
+	bb3d = obj.objectPtr.bound_box
 	bb3d_list = [ mathutils.Vector( p ) for p in bb3d ]
 	coords_2d = [ object_utils.world_to_camera_view( scene, cam, p ) for p in bb3d_list ]
 	xx = [ p.x for p in coords_2d ]
