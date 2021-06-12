@@ -490,9 +490,9 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Dimensions")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2d")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Camera")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
-		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 
 
 # ------------------------------------------------------------------------
