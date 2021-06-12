@@ -851,14 +851,13 @@ def write_object_data( scene ):
 	elif scene.writeObjDataTab.opt_writeObjData_Format == "JSON":
 		objectData = helper_mkJsonFromObjects( scene )
 		jsonData = {
-			"frame" : [
+			"frame" :
 				{
 					"frame_current" : frame_current,
 					"render_file" : renderFileName,
 					"files" : fileList,
 					"objects" : objectData
 				}
-			]
 		}
 		targetFileName = helper_getFilename( scene.writeObjDataTab.opt_writeObData_Filename, frame_current, "JSON" )
 		targetFile = helper_getPath( mycd, renderFilePath, targetFileName )
