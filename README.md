@@ -23,6 +23,9 @@ The Addon will create entries in
 *** camera data (will be written only for camerass)
 *** bones
 
+# Known Issues
+* Undo is not working properly when an object is deleted that is also in the "Write Object Data" list.
+
 # ToDo List
 * Refer to BoundingBox addon (https://blenderartists.org/t/addon-minimum-bounding-volume/635618) to create bounding boxes around groups
 * Describe json output format

@@ -549,20 +549,21 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 
+@persistent
+def remove_from_obj_write_data_list(context, obj):
+	print ("remove_from_obj_write_data_list")
+	writeObjDataList = context.scene.writeObjDataList
+	index = 0
+	for e in writeObjDataList:
+		if e.objectPtr == obj:
+			writeObjDataList.remove(index)
+			return
+		index = index + 1
+
 class object_delete_override(bpy.types.Operator):
 	"""delete objects and their derivatives"""
 	bl_idname = "object.delete"
 	bl_label = "Object Delete Operator"
-
-	def remove_from_obj_write_data_list(context, obj):
-		print ("remove_from_obj_write_data_list")
-		writeObjDataList = context.scene.writeObjDataList
-		index = 0
-		for e in writeObjDataList:
-			if e.objectPtr == obj:
-				writeObjDataList.remove(index)
-				return
-			index = index + 1
 
 	@classmethod
 	def poll(cls, context):
