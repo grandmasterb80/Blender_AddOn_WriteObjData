@@ -827,8 +827,17 @@ def helper_mkJsonFromObjects( scene ):
 		if writeBB2D:
 			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB2( scene, active_cam, obj )
 		if writeBones:
+			# check obj.objectPtr.find_armature()
 			jj = helper_mkDictFromPose( obj.objectPtr.pose )
 			jsonData[ objName ][ "pose" ] = jj
+			# print ( "*******************************************************" )
+			# json.dump( jj, sys.stdout, indent = 4 )
+			# print ( "*******************************************************" )
+			# for a in bpy.data.armatures:
+				# if a == obj.objectPtr or a.parent == obj.objectPtr:
+					# armature = a
+			# if armature is not None:
+				# jsonData[ objName ][ "bones" ] = helper_mkDictFromBones( armature.bones )
 		if writeCamera:
 			jsonData[ objName ][ "cameras" ] = helper_mkDictFromCamera( cams[ obj.objectPtr.name ] )
 
