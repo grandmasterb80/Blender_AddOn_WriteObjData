@@ -130,9 +130,11 @@ mode_options = [
 ]
 
 coord_options = [
-	("CAM", "Camera Coord", '', 0),
-	("WOR", "World Coord", '', 1),
-	("CAW", "Camera and World", '', 2),
+	("OBJ", "Object Coord", '', 0),
+	("PAR", "(Highest) Parent Object Coord", '', 1),
+	("CAM", "Camera Coord", '', 2),
+	("WOR", "World Coord", '', 3),
+	("ALL", "Parent, Camera and World", '', 4),
 ]
 
 # ------------------------------------------------------------------------
