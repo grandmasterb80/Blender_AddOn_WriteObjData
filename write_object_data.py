@@ -536,7 +536,6 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Dimensions")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2d")
-
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 
 		h3 = h2.column()
