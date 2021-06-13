@@ -799,7 +799,19 @@ def helper_mkJsonFromObjects( scene ):
 		active_cam = bpy.context.scene.camera
 
 		if writeLocation:
+			np = mathutils.Vector( (0.0, 0.0, 0.0) )
 			jsonData[ objName ][ "location" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.location )
+			if targetCoords == "PAR" or targetCoords == "ALL":
+				p = np
+				co = obj.objectPtr
+				while co.parent != None:
+					p = co.matrix_local @ p
+					co = co.parent
+				jsonData[ objName ][ "location_sys_parent" ] = helper_mkJsonVectorFromVector3( p )
+			if targetCoords == "CAM" or targetCoords == "ALL":
+				jsonData[ objName ][ "location_sys_cam" ] = helper_mkJsonVectorFromVector3( object_utils.world_to_camera_view( scene, active_cam, obj.objectPtr.matrix_world @ np ) )
+			if targetCoords == "WOR" or targetCoords == "ALL":
+				jsonData[ objName ][ "location_sys_world" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.matrix_world @ np )
 		if writeRotation:
 			jsonData[ objName ][ "rotation_mode" ] = obj.objectPtr.rotation_mode
 			jsonData[ objName ][ "rotation_euler" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.rotation_euler )
