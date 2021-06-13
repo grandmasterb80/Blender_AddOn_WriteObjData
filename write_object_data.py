@@ -155,7 +155,7 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		items = coord_options,
 		description = "Coordinates will transformed into the selected coordinate system before they are written to the target file.",
 		options = {'HIDDEN'},
-		default = "CAM"
+		default = "ALL"
 	)
 
 	opt_writeObData_Filename : bpy.props.StringProperty(
