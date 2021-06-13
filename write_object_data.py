@@ -682,7 +682,7 @@ def helper_mkJsonBB3( obj ):
 def helper_mkJsonBB2( scene, cam, obj ):
 	bb3d = obj.objectPtr.bound_box
 	bb3d_list = [ mathutils.Vector( p ) for p in bb3d ]
-	coords_2d = [ object_utils.world_to_camera_view( scene, cam, p ) for p in bb3d_list ]
+	coords_2d = [ object_utils.world_to_camera_view( scene, cam, obj.objectPtr.matrix_world @ p ) for p in bb3d_list ]
 	xx = [ p.x for p in coords_2d ]
 	yy = [ p.y for p in coords_2d ]
 	jsonData = {
