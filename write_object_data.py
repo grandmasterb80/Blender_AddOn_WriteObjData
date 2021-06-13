@@ -823,9 +823,9 @@ def helper_mkJsonFromObjects( scene ):
 		if writeAnimated:
 			print( "I will write the animated parameters for ", obj.objectPtr.name )
 		if writeBB3D:
-			jsonData[ objName ][ "bb3d" ] = helper_mkJsonBB3( obj.objectPtr.bound_box )
+			jsonData[ objName ][ "bb3d" ] = helper_mkJsonBB3( obj )
 		if writeBB2D:
-			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB2( scene, active_cam, obj.objectPtr.bound_box )
+			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB2( scene, active_cam, obj )
 		if writeBones:
 			jj = helper_mkDictFromPose( obj.objectPtr.pose )
 			jsonData[ objName ][ "pose" ] = jj
