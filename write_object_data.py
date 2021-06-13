@@ -159,7 +159,7 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		default = "ALL"
 	)
 
-	opt_writeObData_Filename : bpy.props.StringProperty(
+	opt_writeObjData_Filename : bpy.props.StringProperty(
 		name = "Filename",
 		description = "Name of files that will contain the object data",
 		options = {'HIDDEN'},
@@ -464,7 +464,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 
 		h2 = layout.column()
 		h2.prop(writeObjDataTab, "opt_writeObjData_Coord")
-		h2.prop(writeObjDataTab, "opt_writeObData_Filename")
+		h2.prop(writeObjDataTab, "opt_writeObjData_Filename")
 
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
@@ -898,7 +898,7 @@ def write_object_data( scene ):
 					"objects" : objectData
 				}
 		}
-		targetFileName = helper_getFilename( scene.writeObjDataTab.opt_writeObData_Filename, frame_current, "JSON" )
+		targetFileName = helper_getFilename( scene.writeObjDataTab.opt_writeObjData_Filename, frame_current, "JSON" )
 		targetFile = helper_getPath( mycd, renderFilePath, targetFileName )
 		print( "Writing object data in JSON to \"", targetFile, "\"" )
 		with open( targetFile, 'w') as outfile:
