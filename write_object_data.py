@@ -865,8 +865,8 @@ def write_object_data( scene ):
 	# step size:  scene.frame_step
 	print("---------------------------------------------------------------------------")
 	print("WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE - WRITE")
-	print("scene.writeObjDataTemp.opt_writeObjData_Format = ", scene.writeObjDataTemp.opt_writeObjData_Format)
 	print("scene.writeObjDataTab.opt_writeObjData_Format = ", scene.writeObjDataTab.opt_writeObjData_Format)
+	print("scene.writeObjDataTab.opt_writeObjData_Coord = ", scene.writeObjDataTab.opt_writeObjData_Coord)
 	frame_start = scene.frame_start
 	frame_last = scene.frame_end
 	frame_current = scene.frame_current
