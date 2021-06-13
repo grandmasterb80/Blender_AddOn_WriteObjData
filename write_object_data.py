@@ -635,7 +635,8 @@ def helper_getPath( renderPathDrive, renderPath, path ):
 def helper_getFilesFromCompositorNode( mycd, frame_current, node : bpy.types.CompositorNodeOutputFile ):
 	files = [ ]
 	for value in node.file_slots.values():
-		f = helper_getFilename( value.path, frame_current, value.format.file_format )
+		format = node.format.file_format if value.use_node_format else value.format.file_format
+		f = helper_getFilename( value.path, frame_current, format )
 		p = helper_getPath( mycd, node.base_path, f )
 		files.append( p )
 	return files
