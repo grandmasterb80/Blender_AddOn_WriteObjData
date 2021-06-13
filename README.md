@@ -24,5 +24,8 @@ The Addon will create entries in
 *** bones
 
 # ToDo List
+* Refer to BoundingBox addon (https://blenderartists.org/t/addon-minimum-bounding-volume/635618) to create bounding boxes around groups
+* Describe json output format
+* test output with armature and bones (w.r.t. BB3D, BB2d, coord. sys. output)
 * Offer files written by CompositorNodeOutputFile as reference file in COCO file output
 * Youtube Tutorial
