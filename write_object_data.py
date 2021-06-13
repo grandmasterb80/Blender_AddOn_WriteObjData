@@ -166,6 +166,13 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		default = "obj_data"
 	)
 
+	opt_writeObjData_UseObjName : bpy.props.BoolProperty(
+		name = "Use Object Name",
+		description = "Object names will be used in the target file. If deselected, the object names will be simply enumerated names. The structure will have the object name as variable in any case.",
+		options = {'HIDDEN'},
+		default = True
+	)
+
 # ------------------------------------------------------------------------
 #    Store properties for the "Output Object Data" in the active scene
 # ------------------------------------------------------------------------
@@ -465,6 +472,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		h2 = layout.column()
 		h2.prop(writeObjDataTab, "opt_writeObjData_Coord")
 		h2.prop(writeObjDataTab, "opt_writeObjData_Filename")
+		h2.prop(writeObjDataTab, "opt_writeObjData_UseObjName")
 
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
@@ -758,9 +766,13 @@ def helper_mkJsonFromObjects( scene ):
 	#bpy.types.Scene.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
 	objID = 0
 	targetCoords = scene.writeObjDataTab.opt_writeObjData_Coord
+	useObjName = scene.writeObjDataTab.opt_writeObjData_UseObjName
 
 	for obj in scene.writeObjDataList:
-		objName = "object_" + '{:0>4}'.format( objID ) 
+		if useObjName:
+			objName = obj.objectPtr.name
+		else:
+			objName = "object_" + '{:0>4}'.format( objID ) 
 		objID = objID + 1
 		jsonData[ objName ] = {
 			"name" : obj.objectPtr.name,
