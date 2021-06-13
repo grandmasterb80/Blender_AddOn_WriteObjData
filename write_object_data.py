@@ -42,6 +42,7 @@ import webbrowser
 import pprint
 import json
 import mathutils
+import sys
 
 from bpy.props import (StringProperty,
 						BoolProperty,
@@ -800,6 +801,16 @@ def helper_mkJsonFromObjects( scene ):
 		cams = bpy.data.cameras
 		active_cam = bpy.context.scene.camera
 
+		# print("**********************************************************************")
+		# for a in bpy.data.armatures:
+			# print(a.name)
+			# #dump_obj(a)
+		# print("**********************************************************************")
+		# for a in bpy.data.objects:
+			# #if a.type == "ARMATURE":
+			# print(a.name, ", ", a.type)
+			# #dump_obj(o)
+		# print("**********************************************************************")
 		if writeLocation:
 			np = mathutils.Vector( (0.0, 0.0, 0.0) )
 			jsonData[ objName ][ "location" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.location )
