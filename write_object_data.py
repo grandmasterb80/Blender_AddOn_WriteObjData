@@ -756,6 +756,8 @@ def helper_mkJsonFromObjects( scene ):
 	#bpy.types.Scene.writeObjDataTab = PointerProperty(type=WriteObjDataOutputPropertySettings)
 	#bpy.types.Scene.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
 	objID = 0
+	targetCoords = scene.writeObjDataTab.opt_writeObjData_Coord
+
 	for obj in scene.writeObjDataList:
 		objName = "object_" + '{:0>4}'.format( objID ) 
 		objID = objID + 1
