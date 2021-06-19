@@ -68,6 +68,8 @@ from bpy.app.handlers import persistent
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
+# \brief: Check if object v can be converted to a json object
+
 def isJsonable(v):
 	if isinstance( v, mathutils.Vector ):
 		return True
@@ -85,6 +87,8 @@ def isJsonable(v):
 			return False
 
 # ------------------------------------------------------------------------
+# \brief: Helper function to print an object to console
+
 def dump_obj(obj):
 	for attr in dir(obj):
 		try:
@@ -98,10 +102,8 @@ def dump_obj(obj):
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
-
-# ------------------------------------------------------------------------
-#    Class to define a single element in the write-object-data-list
-# ------------------------------------------------------------------------
+# \brief: Class to define a single element in the write-object-data-list
+# Each element consists of a pointer to the referenced object and its name.
 
 class ListItem(PropertyGroup):
 	"""Group of properties representing an item in the list."""
