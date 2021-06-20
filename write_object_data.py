@@ -604,9 +604,28 @@ class object_delete_override(bpy.types.Operator):
 		return {'FINISHED'}
 
 # ------------------------------------------------------------------------
+# Functions compute the project matrix of a camera
+# ------------------------------------------------------------------------
+@persistent
+def get_perspective( camera ):
+    """Compute projection matrix of blender camera.
+
+    Arguments:
+        camera {bpy.types.Camera} -- Blender camera.
+
+    Returns:
+        mathutils.Matrix -- Projection matrix.
+    """
+    return camera.calc_matrix_camera(
+        depsgraph=bpy.context.evaluated_depsgraph_get(),
+        x=bpy.context.scene.render.resolution_x,
+        y=bpy.context.scene.render.resolution_y,
+        scale_x=bpy.context.scene.render.pixel_aspect_x,
+        scale_y=bpy.context.scene.render.pixel_aspect_y)
+
+# ------------------------------------------------------------------------
 # Functions to handle start / post and complete handler
 # ------------------------------------------------------------------------
-
 @persistent
 def write_object_data_start( scene ):
 	print("---------------------------------------------------------------------------")
@@ -889,18 +908,31 @@ def helper_mkJsonFromObjects( scene ):
 		# print("**********************************************************************")
 		if writeLocation:
 			np = mathutils.Vector( (0.0, 0.0, 0.0) )
+			nm = mathutils.Matrix.Identity(4)
 			jsonData[ objName ][ "location" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.location )
 			if targetCoords == "PAR" or targetCoords == "ALL":
 				p = np
+				m = nm
 				co = obj.objectPtr
 				while co.parent != None:
 					p = co.matrix_local @ p
+					m = co.matrix_local @ m
 					co = co.parent
 				jsonData[ objName ][ "location_sys_parent" ] = helper_mkJsonVectorFromVector3( p )
+				jsonData[ objName ][ "transformation_sys_parent" ] = helper_mkJsonArrayFromMatrix( m )
 			if targetCoords == "CAM" or targetCoords == "ALL":
 				jsonData[ objName ][ "location_sys_cam" ] = helper_mkJsonVectorFromVector3( object_utils.world_to_camera_view( scene, active_cam, obj.objectPtr.matrix_world @ np ) )
+				m1 = obj.objectPtr.matrix_world
+				m2 = active_cam.matrix_world.inverted()
+				m3 = get_perspective( active_cam )
+				m = mathutils.Matrix.Identity(4)
+				m = m1 @ m
+				m = m2 @ m
+				m = m3 @ m
+				jsonData[ objName ][ "transformation_sys_cam" ] = helper_mkJsonArrayFromMatrix( m  )
 			if targetCoords == "WOR" or targetCoords == "ALL":
 				jsonData[ objName ][ "location_sys_world" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.matrix_world @ np )
+				jsonData[ objName ][ "transformation_sys_world" ] = helper_mkJsonArrayFromMatrix( obj.objectPtr.matrix_world )
 		if writeRotation:
 			jsonData[ objName ][ "rotation_mode" ] = obj.objectPtr.rotation_mode
 			jsonData[ objName ][ "rotation_euler" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.rotation_euler )
