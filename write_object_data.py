@@ -268,6 +268,20 @@ class WriteObjDataOutputOptionsPropertySettings(bpy.types.PropertyGroup):
 		default = False
 	)
 
+	opt_writeObjData_bb3dWithChildren : bpy.props.BoolProperty(
+		name="3D Bounding Box + Children",
+		description="Write 3D bounding box data of the object including child objects. The BB3D will be align according to the parent orientation.",
+		options = {'HIDDEN'},
+		default = False
+	)
+
+	opt_writeObjData_bb2dWithChildren : bpy.props.BoolProperty(
+		name="2D Bounding Box + Children",
+		description="Write 2D bounding box data of the object including child objects (always in image coordinates). The BB surrounds all 2D BB of the object and its children objects.",
+		options = {'HIDDEN'},
+		default = False
+	)
+
 	opt_writeObjData_Animated : bpy.props.BoolProperty(
 		name="Animated",
 		description="Write animated data of an object.",
@@ -480,6 +494,8 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Dimensions")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2d")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3dWithChildren")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2dWithChildren")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Camera")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Bones")
@@ -523,6 +539,8 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Dimensions")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3d")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2d")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_bb3dWithChildren")
+		h2.prop(writeObjDataOpt, "opt_writeObjData_bb2dWithChildren")
 		h2.prop(writeObjDataOpt, "opt_writeObjData_Animated")
 
 		h3 = h2.column()
@@ -677,6 +695,18 @@ def helper_mkJsonBB2D( scene, cam, obj ):
 	return jsonData
 
 @persistent
+def helper_mkJsonBB3DWithChildren( obj ):
+	jsonData = {
+	}
+	return jsonData
+
+@persistent
+def helper_mkJsonBB2DWithChildren( scene, cam, obj ):
+	jsonData = {
+	}
+	return jsonData
+
+@persistent
 def helper_toJosn( v ):
 	if isinstance( v, mathutils.Vector ):
 		return helper_mkJsonVectorFromVector3( v )
@@ -759,6 +789,8 @@ def helper_mkJsonFromObjects( scene ):
 		writeDimensions = scene.writeObjDataOpt.opt_writeObjData_Dimensions if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Dimensions
 		writeBB3D = scene.writeObjDataOpt.opt_writeObjData_bb3d if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_bb3d
 		writeBB2D = scene.writeObjDataOpt.opt_writeObjData_bb2d if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_bb2d
+		writebb3dWithChildren = scene.writeObjDataOpt.opt_writeObjData_bb3dWithChildren if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_bb3dWithChildren
+		writebb2dWithChildren = scene.writeObjDataOpt.opt_writeObjData_bb2dWithChildren if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_bb2dWithChildren
 		writeAnimated = scene.writeObjDataOpt.opt_writeObjData_Animated if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Animated
 		writeBones = scene.writeObjDataOpt.opt_writeObjData_Bones if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Bones
 		writeBones = writeBones and ( obj.objectPtr.type == "ARMATURE" )
@@ -825,6 +857,10 @@ def helper_mkJsonFromObjects( scene ):
 			jsonData[ objName ][ "bb3d" ] = helper_mkJsonBB3D( obj )
 		if writeBB2D:
 			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB2D( scene, active_cam, obj )
+		if writebb3dWithChildren:
+			jsonData[ objName ][ "bb3dWithChildren" ] = helper_mkJsonBB3DWithChildren( obj )
+		if writebb2dWithChildren:
+			jsonData[ objName ][ "bb2dWithChildren" ] = helper_mkJsonBB2DWithChildren( scene, active_cam, obj )
 		if writeBones:
 			# check obj.objectPtr.find_armature()
 			jj = helper_mkDictFromPose( obj.objectPtr.pose )
