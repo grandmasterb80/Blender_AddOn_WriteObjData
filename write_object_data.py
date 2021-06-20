@@ -222,29 +222,6 @@ class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 	)
 
 # ------------------------------------------------------------------------
-#    Class to define a single element in the write-object-data-list
-# ------------------------------------------------------------------------
-
-class TestTest(PropertyGroup):
-	opt_writeObjData_Format : bpy.props.EnumProperty(
-		name = "Format",
-		items = mode_options,
-		default = "OFF"
-	)
-
-	hello_world: IntProperty(
-		name="Hello_World",
-		description="Name of object",
-		default=1
-	)
-
-	test: IntProperty(
-		name="TestVariable",
-		description="Name of object",
-		default=2
-	)
-
-# ------------------------------------------------------------------------
 #    Common properties for the "Write Object Data" for output and object property 
 # ------------------------------------------------------------------------
 
@@ -598,11 +575,6 @@ def write_object_data_start( scene ):
 	print("---------------------------------------------------------------------------")
 	print("START - START - START - START - START - START - START - START - START - START")
 	print("Log: def write_object_data_start( scene ).")
-	scene.writeObjDataTemp.opt_writeObjData_Format = scene.writeObjDataTab.opt_writeObjData_Format
-	scene.writeObjDataTemp.hello_world = 1
-	scene.writeObjDataTemp.test = 2
-	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
-	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 
 @persistent
 def helper_getFilename( basename, frameCounter, fileFormat ):
@@ -886,8 +858,6 @@ def write_object_data( scene ):
 	frame_current = scene.frame_current
 
 	# print("Log: def write_object_data_data( scene ).")
-	scene.writeObjDataTemp.hello_world = scene.writeObjDataTemp.hello_world + 1
-	scene.writeObjDataTemp.test = scene.writeObjDataTemp.test + 2
 	renderFileName = scene.render.frame_path(frame = frame_current)
 	( mycd, renderFilePath ) = os.path.splitdrive( renderFileName )
 
@@ -934,8 +904,6 @@ def write_object_data_end( scene ):
 	frame_last = scene.frame_end
 	frame_current = scene.frame_current
 	print("Log: def write_object_data_end( scene ). Frames [", frame_start, ", ", frame_last, "]; current = ", frame_current)
-	print("Log: scene.writeObjDataTemp.hello_world = ", scene.writeObjDataTemp.hello_world)
-	print("Log: scene.writeObjDataTemp.test = ", scene.writeObjDataTemp.test)
 
 # ------------------------------------------------------------------------
 #     Registration
@@ -947,7 +915,6 @@ classes = (
 	OBJECT_UL_WriteObjList_DeleteItem,
 	OBJECT_UL_WriteObjList_AddSelection,
 	OBJECT_UL_WriteObjList_MoveItem,
-	TestTest,
 	WriteObjDataOutputPropertySettings,
 	ObjWriteDataOptionsPropertySettings,
 	WriteObjDataOutputOptionsPropertySettings,
@@ -970,7 +937,6 @@ def register():
 	bpy.app.handlers.render_post.append(write_object_data)
 	# bpy.app.handlers.frame_change_pre.append(my_handler)
 
-	bpy.types.Scene.writeObjDataTemp = PointerProperty(type = TestTest)
 	bpy.types.Scene.writeObjDataTab = PointerProperty(type=WriteObjDataOutputPropertySettings)
 	bpy.types.Scene.writeObjDataOpt = PointerProperty(type=WriteObjDataOutputOptionsPropertySettings)
 	bpy.types.Scene.writeObjDataList = CollectionProperty(type = ListItem)
@@ -1008,7 +974,6 @@ def unregister():
 	del bpy.types.Scene.writeObjDataList
 	del bpy.types.Scene.writeObjDataIndex
 	del bpy.types.Scene.writeObjDataTab
-	del bpy.types.Scene.writeObjDataTemp
 
 
 if __name__ == "__main__":
