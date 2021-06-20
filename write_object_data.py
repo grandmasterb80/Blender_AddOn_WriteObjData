@@ -553,6 +553,28 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
+# get all children from an object
+# https://blenderartists.org/t/how-to-get-a-list-of-an-objects-children/465508
+
+@persistent
+def helper_getAllChildren( obj ):
+	children = [ob for ob in bpy.data.objects if ob.parent == obj]
+	subchildren = []
+	for c in children:
+		subchildren = subchildren + helper_getAllChildren(children)
+	return children + subchildren
+
+# returns the coordinates of the 2D bounding box for the given object in the current scene
+@persistent
+def helper_getBB2D( scene, cam, obj ):
+	bb3d = obj.bound_box
+	bb3d_list = [ mathutils.Vector( p ) for p in bb3d ]
+	coords_2d = [ object_utils.world_to_camera_view( scene, cam, obj.matrix_world @ p ) for p in bb3d_list ]
+	xx = [ p.x for p in coords_2d ]
+	yy = [ p.y for p in coords_2d ]
+	return ( min( xx ), min( yy ), max( xx ), max( yy ) )
+
+# ------------------------------------------------------------------------
 
 @persistent
 def remove_from_obj_write_data_list(context, obj):
@@ -696,13 +718,49 @@ def helper_mkJsonBB2D( scene, cam, obj ):
 
 @persistent
 def helper_mkJsonBB3DWithChildren( obj ):
+	children = helper_getAllChildren( obj.objectPtr )
+	obj_wm = obj.objectPtr.matrix_world.inverted()
+	plist = []
+	for c in children:
+		bb3d_list = [ obj_wm @ c.matrix_world @ mathutils.Vector( p ) for p in c.bound_box ]
+		plist = plist + bb3d_list
+	xl = [ p.x for p in plist ]
+	yl = [ p.y for p in plist ]
+	zl = [ p.z for p in plist ]
+	bb3d = [
+		mathutils.Vector( ( min(xl), min(yl), min(zl) ) ),
+		mathutils.Vector( ( min(xl), min(yl), max(zl) ) ),
+		mathutils.Vector( ( min(xl), max(yl), max(zl) ) ),
+		mathutils.Vector( ( min(xl), max(yl), min(zl) ) ),
+		mathutils.Vector( ( max(xl), min(yl), min(zl) ) ),
+		mathutils.Vector( ( max(xl), min(yl), max(zl) ) ),
+		mathutils.Vector( ( max(xl), max(yl), max(zl) ) ),
+		mathutils.Vector( ( max(xl), max(yl), min(zl) ) )
+	]
+
 	jsonData = {
 	}
+	pIndex = 0
+	for p in bb3d:
+		pointName = "p" + '{:0>1}'.format( pIndex )
+		pIndex = pIndex + 1
+		jsonData[ pointName ] = helper_mkJsonVectorFromVector3(p)
 	return jsonData
 
 @persistent
 def helper_mkJsonBB2DWithChildren( scene, cam, obj ):
+	children = helper_getAllChildren(obj.objectPtr)
+	children.append( obj.objectPtr )
+	l = [ helper_getBB2D( scene, cam, o ) for o in children ]
+	x1l = [ x1 for (x1, _, _, _) in l ]
+	y1l = [ y1 for (_, y1, _, _) in l ]
+	x2l = [ x2 for (_, _, x2, _) in l ]
+	y2l = [ y2 for (_, _, _, y2) in l ]
 	jsonData = {
+		"x1" : min( x1l ),
+		"y1" : min( y1l ),
+		"x2" : max( x2l ),
+		"y2" : max( y2l )
 	}
 	return jsonData
 
