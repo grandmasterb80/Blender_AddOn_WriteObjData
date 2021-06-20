@@ -650,7 +650,7 @@ def helper_mkJsonDOFSetting( dofS ):
 	return jsonData
 
 @persistent
-def helper_mkJsonBB3( obj ):
+def helper_mkJsonBB3D( obj ):
 	jsonData = {
 	}
 	bb3d = obj.objectPtr.bound_box
@@ -662,7 +662,7 @@ def helper_mkJsonBB3( obj ):
 	return jsonData
 
 @persistent
-def helper_mkJsonBB2( scene, cam, obj ):
+def helper_mkJsonBB2D( scene, cam, obj ):
 	bb3d = obj.objectPtr.bound_box
 	bb3d_list = [ mathutils.Vector( p ) for p in bb3d ]
 	coords_2d = [ object_utils.world_to_camera_view( scene, cam, obj.objectPtr.matrix_world @ p ) for p in bb3d_list ]
@@ -822,9 +822,9 @@ def helper_mkJsonFromObjects( scene ):
 		if writeAnimated:
 			print( "I will write the animated parameters for ", obj.objectPtr.name )
 		if writeBB3D:
-			jsonData[ objName ][ "bb3d" ] = helper_mkJsonBB3( obj )
+			jsonData[ objName ][ "bb3d" ] = helper_mkJsonBB3D( obj )
 		if writeBB2D:
-			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB2( scene, active_cam, obj )
+			jsonData[ objName ][ "bb2d" ] = helper_mkJsonBB2D( scene, active_cam, obj )
 		if writeBones:
 			# check obj.objectPtr.find_armature()
 			jj = helper_mkDictFromPose( obj.objectPtr.pose )
