@@ -28,8 +28,21 @@ The Addon will create entries in
 * Undo is not working properly when an object is deleted that is also in the "Write Object Data" list.
 
 # ToDo List
-* Refer to BoundingBox addon (https://blenderartists.org/t/addon-minimum-bounding-volume/635618) to create bounding boxes around groups
-* Describe json output format
-* test output with armature and bones (w.r.t. BB3D, BB2d, coord. sys. output)
+* Implementation work:
+** Describe json output format
+** Restructure code: outsource mkJson function to extra file
+** Consider group in writing data
+* Update doc regarding "group" feature
+* test output with CarRig (ongoing)
 * Offer files written by CompositorNodeOutputFile as reference file in COCO file output
 * Youtube Tutorial
+
+# Done List
+* Test output with CarRig
+** armature introduces BBs that are to large
+** writing BBs for "whole vehicles" is difficult: it requires special handling (armature stuff has to be filtered out)
+* Refer to BoundingBox addon (https://blenderartists.org/t/addon-minimum-bounding-volume/635618) to create bounding boxes around groups
+** Did not work out, because the plugin is not working with the current blender version
+** Hence, creation of BB around vehicles is not possible with this plugin. In addition, it is unclear if the BB consider dynamic behavior (e.g. steered wheels).
+
+
