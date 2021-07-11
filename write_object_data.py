@@ -1051,10 +1051,8 @@ classes = (
 )
 
 def register():
-	from bpy.utils import register_class
-
 	for cls in classes:
-		register_class(cls)
+		bpy.utils.register_class(cls)
 
 	# register 'on render' handler
 	# bpy.app.handlers.render_write.append(write_object_data)
@@ -1074,9 +1072,8 @@ def register():
 
 
 def unregister():
-	from bpy.utils import unregister_class
 	for cls in reversed(classes):
-		unregister_class(cls)
+		bpy.utils.unregister_class(cls)
 
 	handler_list = [
 		bpy.app.handlers.render_init,
