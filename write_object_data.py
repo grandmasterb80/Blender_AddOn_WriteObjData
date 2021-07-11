@@ -108,7 +108,6 @@ def dump_obj(obj):
 class ListItem(PropertyGroup):
 	"""Group of properties representing an item in the list."""
 
-	#name = StringProperty() -> Instantiated by default
 	objectPtr: PointerProperty(
 		name="Object",
 		type=bpy.types.Object
