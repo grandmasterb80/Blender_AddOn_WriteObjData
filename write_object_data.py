@@ -801,10 +801,10 @@ def helper_toJosn( v ):
 		return v
 
 @persistent
-def helper_mkJsonFrumPyObj( obj ):
+def helper_mkJsonFromPyObj( obj ):
 	jsonData = {
 	}
-	#print(" ***************** helper_mkJsonFrumPyObj( obj ) = ", obj)
+	#print(" ***************** helper_mkJsonFromPyObj( obj ) = ", obj)
 	for attr in dir(obj):
 		try:
 			if ( attr[ :2 ] != "__" and attr[ -2: ] != "__" ) and ( not hasattr(attr, '__call__') ) and isJsonable( getattr(obj, attr) ):
@@ -821,7 +821,7 @@ def helper_mkDictFromBones( bones ):
 	for v in bones.values():
 		boneName = "bone_" + '{:0>4}'.format( boneID ) 
 		boneID = boneID + 1
-		jsonData[ boneName ] = helper_mkJsonFrumPyObj( v )
+		jsonData[ boneName ] = helper_mkJsonFromPyObj( v )
 	return jsonData
 
 @persistent
@@ -837,7 +837,7 @@ def helper_mkDictFromPose( pose ):
 @persistent
 def helper_mkDictFromCamera( camera ):
 	#dump_obj( camera )
-	return helper_mkJsonFrumPyObj( camera )
+	return helper_mkJsonFromPyObj( camera )
 
 @persistent
 def helper_mkJsonFromObjects( scene ):
