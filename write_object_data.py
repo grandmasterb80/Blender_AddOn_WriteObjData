@@ -329,17 +329,24 @@ class OBJECT_UL_WriteObjList_Class(bpy.types.UIList):
 		custom_icon = 'OUTLINER_COLLECTION'
 
 		if item:
+			o_icon = 'OBJECT_DATA'
+			if item.objectPtr.type == 'CAMERA':
+				o_icon = 'CAMERA_DATA'
+			elif item.objectPtr.type == 'ARMATURE':
+				o_icon = 'ARMATURE_DATA'
+			elif item.objectPtr.type == 'LIGHT':
+				o_icon = 'LIGHT'
 			# draw_item must handle the three layout types... Usually 'DEFAULT' and 'COMPACT' can share the same code.
 			if self.layout_type in {'DEFAULT', 'COMPACT'}:
 				# You should always start your row layout by a label (icon + text), or a non-embossed text field,
 				# this will also make the row easily selectable in the list! The later also enables ctrl-click rename.
 				# We use icon_value of label, as our given icon is an integer value, not an enum ID.
 				# Note "data" names should never be translated!
-				layout.prop(item, "name", text="", emboss=False, icon_value=icon)
+				layout.prop(item, "name", text="", emboss=False, icon=o_icon)
 			# 'GRID' layout type should be as compact as possible (typically a single icon!).
 			elif self.layout_type in {'GRID'}:
 				layout.alignment = 'CENTER'
-				layout.prop(item, "name", text="", emboss=False, icon_value=icon)
+				layout.prop(item, "name", text="", emboss=False, icon=o_icon)
 
 # ------------------------------------------------------------------------
 #    Operator to add current selection to the list
