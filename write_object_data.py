@@ -169,7 +169,7 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 
 	opt_writeObjData_UseObjName : bpy.props.BoolProperty(
 		name = "Use Object Name",
-		description = "Object names will be used in the target file. If deselected, the object names will be simply enumerated names. The structure will have the object name as variable in any case.",
+		description = "Object names will be used in the target file. If deselected, the object names will be simply enumerated names. The structure will have the object name as member in any case.",
 		options = {'HIDDEN'},
 		default = True
 	)
