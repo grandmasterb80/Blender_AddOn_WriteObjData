@@ -108,6 +108,12 @@ def dump_obj(obj):
 class ListItem(PropertyGroup):
 	"""Group of properties representing an item in the list."""
 
+	objectGroup: IntProperty(
+		name="Group",
+		description="0 if object data is only for this object; >0 if object data has to be grouped as part of an object group",
+		default=0
+	)
+
 	objectPtr: PointerProperty(
 		name="Object",
 		type=bpy.types.Object
@@ -172,6 +178,13 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 		description = "Object names will be used in the target file. If deselected, the object names will be simply enumerated names. The structure will have the object name as member in any case.",
 		options = {'HIDDEN'},
 		default = True
+	)
+
+	opt_writeObjData_groupForAdding : bpy.props.IntProperty(
+		name = "Group Index",
+		description = "If >0 then selected members will be assigned to the given group (or re-assigned to that group if they are already in the list of objects for which object data has to be written.",
+		options = {'HIDDEN'},
+		default = 0
 	)
 
 # ------------------------------------------------------------------------
@@ -328,6 +341,7 @@ class OBJECT_UL_WriteObjList_Class(bpy.types.UIList):
 		# We could write some code to decide which icon to use here...
 		custom_icon = 'OUTLINER_COLLECTION'
 
+		# determine icon for the item to be displayed
 		if item:
 			o_icon = 'OBJECT_DATA'
 			if item.objectPtr.type == 'CAMERA':
@@ -336,17 +350,23 @@ class OBJECT_UL_WriteObjList_Class(bpy.types.UIList):
 				o_icon = 'ARMATURE_DATA'
 			elif item.objectPtr.type == 'LIGHT':
 				o_icon = 'LIGHT'
+			# GROUP
+			if item.objectGroup > 0:
+				groupStr = "Group " + str(item.objectGroup)
+			else:
+				groupStr = "Ungrouped"
+
 			# draw_item must handle the three layout types... Usually 'DEFAULT' and 'COMPACT' can share the same code.
 			if self.layout_type in {'DEFAULT', 'COMPACT'}:
 				# You should always start your row layout by a label (icon + text), or a non-embossed text field,
 				# this will also make the row easily selectable in the list! The later also enables ctrl-click rename.
 				# We use icon_value of label, as our given icon is an integer value, not an enum ID.
 				# Note "data" names should never be translated!
-				layout.prop(item, "name", text="", emboss=False, icon=o_icon)
+				layout.prop(item, "name", text=groupStr, emboss=False, icon=o_icon)
 			# 'GRID' layout type should be as compact as possible (typically a single icon!).
 			elif self.layout_type in {'GRID'}:
 				layout.alignment = 'CENTER'
-				layout.prop(item, "name", text="", emboss=False, icon=o_icon)
+				layout.prop(item, "name", text=groupStr, emboss=False, icon=o_icon)
 
 # ------------------------------------------------------------------------
 #    Operator to add current selection to the list
@@ -362,15 +382,21 @@ class OBJECT_UL_WriteObjList_AddSelection(Operator):
 		return context.selected_objects
 
 	def execute(self, context):
+		group = context.scene.writeObjDataTab.opt_writeObjData_groupForAdding
 		for obj in context.selected_objects:
 			writeObjDataList = context.scene.writeObjDataList
 			if obj not in [sub.objectPtr for sub in writeObjDataList]:
 				writeObjDataList.add()
 				newEl = writeObjDataList[ -1 ]
+				newEl.objectGroup = group
 				newEl.objectPtr = obj
 				newEl.name = obj.name
 				newEl.objectPtr.writeObjDataTab.opt_writeObjDataObject_Enabled = True
-
+			else:
+				for e in writeObjDataList:
+					if e.objectPtr == obj:
+						e.objectGroup = group
+						break
 		return{'FINISHED'} 
 
 # ------------------------------------------------------------------------
@@ -467,6 +493,7 @@ class Panel_OutputOptions_WriteObjectData(Panel):
 		h2.prop(writeObjDataTab, "opt_writeObjData_Coord")
 		h2.prop(writeObjDataTab, "opt_writeObjData_Filename")
 		h2.prop(writeObjDataTab, "opt_writeObjData_UseObjName")
+		h2.prop(writeObjDataTab, "opt_writeObjData_groupForAdding")
 
 		# template_list now takes two new args.
 		# The first one is the identifier of the registered UIList to use (if you want only the default list,
