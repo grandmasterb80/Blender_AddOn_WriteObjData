@@ -191,13 +191,26 @@ class WriteObjDataOutputPropertySettings(bpy.types.PropertyGroup):
 #    Store properties for the "Output Object Data" in the active scene
 # ------------------------------------------------------------------------
 
+# helper function to check if an object is in the list of object for which object data has to be written.
+@persistent
+def helper_objectInWriteObjData(obj, writeObjDataList):
+	singleObjList = [sub.objectPtr for sub in writeObjDataList if sub.objectPtr == obj]
+	return singleObjList
+
+@persistent
+def helper_objectInWriteObjGroupDataList(obj, writeObjDataList):
+	l = [helper_objectInWriteObjDataList(obj, sub.objectCollection) for sub in writeObjDataList if sub.objectCollection != None]
+	groupObjList = [x for x in l if x == True]
+	return groupObjList
+
 class ObjWriteDataOptionsPropertySettings(bpy.types.PropertyGroup):
 	def update_opt_writeObjDataObject(self, context):
 		obj = context.object
 		if obj:
 			writeObjDataList = context.scene.writeObjDataList
 			if obj.writeObjDataTab.opt_writeObjDataObject_Enabled:
-				if self not in [sub.objectPtr for sub in writeObjDataList]:
+				singleObjList = helper_objectInWriteObjDataList(self, writeObjDataList)
+				if not singleObjList:
 					writeObjDataList.add()
 					iii = writeObjDataList[ -1 ]
 					iii.objectPtr = obj
