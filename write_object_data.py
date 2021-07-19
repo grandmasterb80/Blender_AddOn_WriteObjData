@@ -901,6 +901,9 @@ def helper_mkJsonFromObjects( scene ):
 			"name" : obj.objectPtr.name,
 			"type" : obj.objectPtr.type
 		}
+
+		print( "I will write the object data for ", obj.objectPtr.name, " ({0:s}visible)".format("not " if obj.objectPtr.hide_render else "") )
+
 		useGlobal = obj.objectPtr.writeObjDataTab.opt_writeObjDataObject_UseGlobal
 		writeLocation = scene.writeObjDataOpt.opt_writeObjData_Location if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Location
 		writeRotation = scene.writeObjDataOpt.opt_writeObjData_Rotation if useGlobal else obj.objectPtr.writeObjDataOpt.opt_writeObjData_Rotation
