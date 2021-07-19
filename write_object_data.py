@@ -586,7 +586,7 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 
 @persistent
 def helper_getAllChildren( obj ):
-	children = [ob for ob in bpy.data.objects if ob.parent == obj]
+	children = [ ob for ob in bpy.data.objects if ob.parent == obj ]
 	subchildren = children
 	for c in children:
 		subchildren = subchildren + helper_getAllChildren( c )
