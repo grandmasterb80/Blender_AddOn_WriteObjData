@@ -766,6 +766,7 @@ def helper_mkJsonBB2D( scene, cam, obj ):
 @persistent
 def helper_mkJsonBB3DWithChildren( obj ):
 	children = helper_getAllChildren( obj.objectPtr )
+	children = [ o for o in children if not o.hide_render ]
 	obj_wm = obj.objectPtr.matrix_world.inverted()
 	plist = []
 	for c in children:
@@ -798,7 +799,7 @@ def helper_mkJsonBB3DWithChildren( obj ):
 def helper_mkJsonBB2DWithChildren( scene, cam, obj ):
 	children = helper_getAllChildren(obj.objectPtr)
 	children.append( obj.objectPtr )
-	l = [ helper_getBB2D( scene, cam, o ) for o in children ]
+	l = [ helper_getBB2D( scene, cam, o ) for o in children if not o.hide_render ]
 	x1l = [ x1 for (x1, _, _, _) in l ]
 	y1l = [ y1 for (_, y1, _, _) in l ]
 	x2l = [ x2 for (_, _, x2, _) in l ]
