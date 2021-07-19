@@ -589,7 +589,7 @@ def helper_getAllChildren( obj ):
 	children = [ob for ob in bpy.data.objects if ob.parent == obj]
 	subchildren = []
 	for c in children:
-		subchildren = subchildren + helper_getAllChildren(children)
+		subchildren = subchildren + helper_getAllChildren( c )
 	return children + subchildren
 
 # returns the coordinates of the 2D bounding box for the given object in the current scene
