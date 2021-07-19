@@ -587,10 +587,10 @@ class Panel_ObjectOptions_WriteObjectData(Panel):
 @persistent
 def helper_getAllChildren( obj ):
 	children = [ob for ob in bpy.data.objects if ob.parent == obj]
-	subchildren = []
+	subchildren = children
 	for c in children:
 		subchildren = subchildren + helper_getAllChildren( c )
-	return children + subchildren
+	return subchildren
 
 # returns the coordinates of the 2D bounding box for the given object in the current scene
 @persistent
