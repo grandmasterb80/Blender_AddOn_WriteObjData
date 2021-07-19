@@ -984,7 +984,8 @@ def helper_mkJsonFromObjects( scene ):
 		if writeDimensions:
 			jsonData[ objName ][ "dimensions" ] = helper_mkJsonVectorFromVector3( obj.objectPtr.dimensions )
 		if writeAnimated:
-			print( "I will write the animated parameters for ", obj.objectPtr.name )
+			#print( "I will write the animated parameters for ", obj.objectPtr.name )
+			pass
 		if writeBB3D:
 			jsonData[ objName ][ "bb3d" ] = helper_mkJsonBB3D( obj )
 		if writeBB2D:
