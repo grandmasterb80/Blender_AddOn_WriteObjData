@@ -785,9 +785,18 @@ def helper_mkJsonBB3DWithChildren( obj ):
 	for c in children:
 		bb3d_list = [ obj_wm @ c.matrix_world @ mathutils.Vector( p ) for p in c.bound_box ]
 		plist = plist + bb3d_list
-	xl = [ p.x for p in plist ]
-	yl = [ p.y for p in plist ]
-	zl = [ p.z for p in plist ]
+
+	if plist:
+		xl = [ p.x for p in plist ]
+		yl = [ p.y for p in plist ]
+		zl = [ p.z for p in plist ]
+	else:
+		# might happen, e.g. for cameras
+		print ( "helper_mkJsonBB3DWithChildren: no children for object ", obj.objectPtr.name )
+		xl = [ 0.0 ]
+		yl = [ 0.0 ]
+		zl = [ 0.0 ]
+
 	bb3d = [
 		mathutils.Vector( ( min(xl), min(yl), min(zl) ) ),
 		mathutils.Vector( ( min(xl), min(yl), max(zl) ) ),
@@ -812,11 +821,21 @@ def helper_mkJsonBB3DWithChildren( obj ):
 def helper_mkJsonBB2DWithChildren( scene, cam, obj ):
 	children = helper_getAllChildren(obj.objectPtr)
 	children.append( obj.objectPtr )
+
 	l = [ helper_getBB2D( scene, cam, o ) for o in children if not o.hide_render ]
-	x1l = [ x1 for (x1, _, _, _) in l ]
-	y1l = [ y1 for (_, y1, _, _) in l ]
-	x2l = [ x2 for (_, _, x2, _) in l ]
-	y2l = [ y2 for (_, _, _, y2) in l ]
+	if l:
+		x1l = [ x1 for (x1, _, _, _) in l ]
+		y1l = [ y1 for (_, y1, _, _) in l ]
+		x2l = [ x2 for (_, _, x2, _) in l ]
+		y2l = [ y2 for (_, _, _, y2) in l ]
+	else:
+		# might happen, e.g. for cameras
+		print ( "helper_mkJsonBB2DWithChildren: no children for object ", obj.objectPtr.name )
+		x1l = [ 0.0 ]
+		y1l = [ 0.0 ]
+		x2l = [ 0.0 ]
+		y2l = [ 0.0 ]
+
 	jsonData = {
 		"x1" : min( x1l ),
 		"y1" : min( y1l ),
